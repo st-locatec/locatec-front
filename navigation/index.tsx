@@ -53,7 +53,7 @@ function RootNavigator() {
                      type="font-awesome"
                      color={Colors[colorScheme].text}
                      style={{ marginRight: 15 }}
-                     onPress={() => navigation.navigate("Modal")}
+                     onPress={() => navigation.navigate("Report")}
                   />
                ),
             })}
@@ -63,9 +63,13 @@ function RootNavigator() {
             component={NotFoundScreen}
             options={{ title: "Oops!" }}
          />
-         <Stack.Group screenOptions={{ presentation: "modal" }}>
-            <Stack.Screen name="Modal" component={ModalScreen} />
-         </Stack.Group>
+         <Stack.Screen
+            name="Report"
+            component={ModalScreen}
+            options={{
+               title: "추가 요청",
+            }}
+         />
       </Stack.Navigator>
    );
 }

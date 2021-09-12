@@ -3,7 +3,10 @@ import { StyleSheet } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE, Region } from "react-native-maps";
 import { View } from "../../Themed";
 import Layout from "../../../constants/Layout";
-import { Image } from "react-native-elements";
+import { Button, Image } from "react-native-elements";
+import { stylesFuncType } from "../types";
+import { FLOATING_BUTTON_WIDTH } from "../../../constants/Size";
+import FloatingButton from "../elements/FloatingButton";
 
 type Props = {
    region: Region;
@@ -37,6 +40,14 @@ function Main({ region, mapViewRef, onAnimateRegion }: Props) {
                </View>
             </Marker>
          </MapView>
+         <View style={[styles.buttonCol, { left: 0 }]}>
+            <FloatingButton />
+            <FloatingButton />
+         </View>
+         <View style={[styles.buttonCol, { right: 0 }]}>
+            <FloatingButton />
+            <FloatingButton />
+         </View>
       </View>
    );
 }
@@ -57,10 +68,21 @@ const styles = StyleSheet.create({
       justifyContent: "center",
       width: 50,
       height: 50,
+      backgroundColor: "transparent",
    },
    marker: {
       width: 30,
       height: 30,
+   },
+   buttonCol: {
+      position: "absolute",
+      bottom: 50,
+      height: FLOATING_BUTTON_WIDTH * 2 + 20,
+      backgroundColor: "transparent",
+      justifyContent: "space-around",
+      paddingLeft: 20,
+      paddingRight: 20,
+      zIndex: 1,
    },
 });
 
