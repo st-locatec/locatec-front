@@ -11,13 +11,12 @@ import {
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
 import { ColorSchemeName } from "react-native";
-import { Icon } from "react-native-elements";
+import { Switch } from "react-native-elements";
 
-import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
-import ModalScreen from "../screens/ModalScreen";
+import ReportScreen from "../screens/ReportScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
-import TabOneScreen from "../screens/TabOneScreen";
+import MainScreen from "../screens/MainScreen";
 import { RootStackParamList, RootStackScreenProps } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
 
@@ -43,19 +42,10 @@ function RootNavigator() {
       <Stack.Navigator>
          <Stack.Screen
             name="Root"
-            component={TabOneScreen}
-            options={({ navigation }: RootStackScreenProps<"Root">) => ({
+            component={MainScreen}
+            options={() => ({
                title: "앱 이름",
-               headerRight: () => (
-                  <Icon
-                     name="plus"
-                     size={25}
-                     type="font-awesome"
-                     color={Colors[colorScheme].text}
-                     style={{ marginRight: 15 }}
-                     onPress={() => navigation.navigate("Report")}
-                  />
-               ),
+               headerRight: () => <Switch value={true} />,
             })}
          />
          <Stack.Screen
@@ -65,7 +55,7 @@ function RootNavigator() {
          />
          <Stack.Screen
             name="Report"
-            component={ModalScreen}
+            component={ReportScreen}
             options={{
                title: "추가 요청",
             }}

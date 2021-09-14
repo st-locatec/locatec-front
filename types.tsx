@@ -19,3 +19,16 @@ export type RootStackParamList = {
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
    NativeStackScreenProps<RootStackParamList, Screen>;
+
+/* 
+   위치 데이터 타입
+*/
+export const SMOKE = "smoking" as const;
+export const TRASHCAN = "trash" as const;
+
+export type LocationType = typeof SMOKE | typeof TRASHCAN;
+
+export type MarkerType = {
+   type: LocationType;
+   coords: { latitude: number; longitude: number };
+};
