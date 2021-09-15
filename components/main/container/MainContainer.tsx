@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import MapView, { Region } from "react-native-maps";
-import { parseToRegion } from "../../../utils/parseLocation";
 import Main from "../view/Main";
-import * as Location from "expo-location";
 import {
    LocationType,
    MarkerType,
@@ -13,11 +11,12 @@ import calculateLength from "../../../utils/calculateLengh";
 import { INSIDE_SHCOOL } from "../../../constants/Size";
 import { locate } from "../tempData";
 import { centerSchool, deltas } from "../../../constants/Variables";
+import getMyLocation from "../../../utils/getMyLocation";
 
 type Props = {};
 
 function MainContainer({ navigation }: Props & RootStackScreenProps<"Root">) {
-   const [myLocation, setMyLocation] = useState<Region | null>(null);
+   const [myLocation, setMyLocation] = useState<Region>(centerSchool);
    const [markers, setMarkers] = useState<MarkerType[]>();
    const [region, setRegion] = useState<Region>(centerSchool);
    const [locationType, setLocationType] = useState<LocationType>(SMOKE);
@@ -27,21 +26,21 @@ function MainContainer({ navigation }: Props & RootStackScreenProps<"Root">) {
    //처음들어오고 학교에서 0.007 이상 벗어난 위도 경도면 학교 중심을, 아니면 본인위치를 보여주기
    useEffect(() => {
       const mainInit = async () => {
-         let { status } = await Location.requestForegroundPermissionsAsync();
-         if (status !== "granted") {
-            return;
-         }
          let initialCoords: Region = centerSchool;
+
          try {
-            let location = await Location.getCurrentPositionAsync({});
-            const parsed = parseToRegion(location);
+            const parsed = await getMyLocation();
             if (
                parsed.latitude <= region.latitude + INSIDE_SHCOOL &&
                parsed.longitude <= region.longitude + INSIDE_SHCOOL &&
                parsed.latitude >= region.latitude - INSIDE_SHCOOL &&
                parsed.longitude >= region.longitude - INSIDE_SHCOOL
             ) {
-               initialCoords = { ...location.coords, ...deltas };
+               initialCoords = {
+                  latitude: parsed.latitude,
+                  longitude: parsed.longitude,
+                  ...deltas,
+               };
             }
          } catch (e) {
             initialCoords = centerSchool;

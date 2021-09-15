@@ -4,6 +4,7 @@
  */
 
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Region } from "react-native-maps";
 
 declare global {
    namespace ReactNavigation {
@@ -32,3 +33,13 @@ export type MarkerType = {
    type: LocationType;
    coords: { latitude: number; longitude: number };
 };
+
+/* 기타 타입들 */
+export type AnimateRegionType = (
+   reg: Region,
+   details?:
+      | {
+           isGesture: boolean;
+        }
+      | undefined
+) => void;

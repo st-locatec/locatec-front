@@ -1,12 +1,14 @@
 import React from "react";
 import { StyleSheet } from "react-native";
-import { Image } from "react-native-elements";
-import MapView, { Marker, PROVIDER_GOOGLE, Region } from "react-native-maps";
+import MapView, { Region } from "react-native-maps";
 import PagerView, {
    PagerViewOnPageSelectedEvent,
 } from "react-native-pager-view";
+import { AnimateRegionType } from "../../../types";
+
 import { Text, View } from "../../Themed";
 import NaviButtons from "../elements/naviButtons";
+import StepIndicator from "../elements/StepIndicator";
 import Info from "./Info";
 import Map from "./Map";
 
@@ -18,6 +20,7 @@ type Props = {
    goPrev: () => void;
    position: number;
    onPageScroll: (e: PagerViewOnPageSelectedEvent) => void;
+   onAnimateRegion: AnimateRegionType;
 };
 
 function Report({
@@ -28,19 +31,25 @@ function Report({
    goPrev,
    position,
    onPageScroll,
+   onAnimateRegion,
 }: Props) {
    return (
       <View style={styles.container}>
+         <StepIndicator position={position} />
          <PagerView
             ref={pagerRef}
             style={{ flex: 1 }}
             initialPage={0}
             onPageSelected={onPageScroll}>
             <View key="1" style={{ flex: 1 }}>
-               <Map region={region} mapViewRef={mapViewRef} />
+               <Map
+                  region={region}
+                  mapViewRef={mapViewRef}
+                  onAnimateRegion={onAnimateRegion}
+               />
             </View>
 
-            <View key="2">
+            <View key="2" style={{ flex: 1 }}>
                <Info />
             </View>
          </PagerView>

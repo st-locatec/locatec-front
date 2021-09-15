@@ -36,6 +36,7 @@ type ThemeProps = {
 
 export type TextProps = ThemeProps & DefaultText["props"];
 export type ViewProps = ThemeProps & DefaultView["props"];
+
 export type ThemedButtonProps = ThemeProps & ButtonProps & { color?: string };
 export type ThemedSpeedDialProps = ThemeProps &
    SpeedDialProps & { color?: string; actions?: ButtonProps[] };

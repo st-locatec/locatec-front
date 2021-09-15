@@ -7,21 +7,20 @@ import { Image } from "react-native-elements";
 import { FLOATING_BUTTON_WIDTH } from "../../../constants/Size";
 import { CustomSpeedDial, FloatingButton } from "../elements/CustomButtons";
 import Colors from "../../../constants/Colors";
-import { LocationType, MarkerType, SMOKE, TRASHCAN } from "../../../types";
+import {
+   AnimateRegionType,
+   LocationType,
+   MarkerType,
+   SMOKE,
+   TRASHCAN,
+} from "../../../types";
 
 type Props = {
-   myLocation: Region | null;
+   myLocation: Region;
    markers: MarkerType[] | undefined;
    region: Region;
    mapViewRef: React.RefObject<MapView>;
-   onAnimateRegion: (
-      reg: Region,
-      details?:
-         | {
-              isGesture: boolean;
-           }
-         | undefined
-   ) => void;
+   onAnimateRegion: AnimateRegionType;
    isOpen: boolean;
    locationType: LocationType;
    toggleIsOpen: () => void;
@@ -53,17 +52,15 @@ function Main({
                key="Gmap"
                style={styles.map}
                onRegionChangeComplete={onAnimateRegion}>
-               {myLocation && (
-                  <Marker key={`marker`} coordinate={myLocation}>
-                     <View style={[styles.markerWrap]}>
-                        <Image
-                           source={require("../../../assets/images/map_marker.png")}
-                           style={[styles.marker]}
-                           resizeMode="cover"
-                        />
-                     </View>
-                  </Marker>
-               )}
+               <Marker key={`marker`} coordinate={myLocation}>
+                  <View style={[styles.markerWrap]}>
+                     <Image
+                        source={require("../../../assets/images/map_marker.png")}
+                        style={[styles.marker]}
+                        resizeMode="cover"
+                     />
+                  </View>
+               </Marker>
                {markers
                   ?.filter((marker: MarkerType) => marker.type === locationType)
                   .map((item: MarkerType, idx: number) => (
