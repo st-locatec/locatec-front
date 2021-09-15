@@ -1,3 +1,4 @@
+import { ImagePickerResult } from "expo-image-picker";
 import React from "react";
 import { StyleSheet } from "react-native";
 import MapView, { Region } from "react-native-maps";
@@ -9,6 +10,7 @@ import { AnimateRegionType, LocationType } from "../../../types";
 import { Text, View } from "../../Themed";
 import NaviButtons from "../elements/naviButtons";
 import StepIndicator from "../elements/StepIndicator";
+import Complete from "./Complete";
 import Info from "./Info";
 import Map from "./Map";
 
@@ -23,6 +25,11 @@ type Props = {
    onAnimateRegion: AnimateRegionType;
    locationType: LocationType;
    settingLocationType: (v: LocationType) => void;
+   selectPhoto: () => Promise<void>;
+   photo: ImagePickerResult | null;
+   sendRequest: () => Promise<void>;
+   gotoHome: () => void;
+   gotoReport: () => void;
 };
 
 function Report({
@@ -36,6 +43,11 @@ function Report({
    onAnimateRegion,
    locationType,
    settingLocationType,
+   selectPhoto,
+   photo,
+   sendRequest,
+   gotoHome,
+   gotoReport,
 }: Props) {
    return (
       <View style={styles.container}>
@@ -57,17 +69,25 @@ function Report({
                <Info
                   locationType={locationType}
                   settingLocationType={settingLocationType}
+                  selectPhoto={selectPhoto}
+                  photo={photo}
+                  sendRequest={sendRequest}
                />
+            </View>
+            <View key="3" style={{ flex: 1 }}>
+               <Complete gotoHome={gotoHome} gotoReport={gotoReport} />
             </View>
          </PagerView>
 
          <View style={{ height: 50 }}>
-            <NaviButtons
-               position={position}
-               goNext={goNext}
-               goPrev={goPrev}
-               last={position === 1}
-            />
+            {position !== 2 && (
+               <NaviButtons
+                  position={position}
+                  goNext={goNext}
+                  goPrev={goPrev}
+                  last={position === 1}
+               />
+            )}
          </View>
       </View>
    );

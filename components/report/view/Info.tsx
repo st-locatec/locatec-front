@@ -1,7 +1,9 @@
+import { ImagePickerResult } from "expo-image-picker";
 import React, { useState } from "react";
 import { Pressable, StyleSheet } from "react-native";
-import { Icon, Input, ListItem } from "react-native-elements";
-import { Menu, MenuDivider, MenuItem } from "react-native-material-menu";
+import { Icon, Image, ListItem } from "react-native-elements";
+import { ScrollView } from "react-native-gesture-handler";
+import { Menu, MenuItem } from "react-native-material-menu";
 import Colors from "../../../constants/Colors";
 import { locStrArray } from "../../../constants/Strings";
 import { LocationType } from "../../../types";
@@ -13,14 +15,24 @@ import { Button, Text, View } from "../../Themed";
 type Props = {
    locationType: LocationType;
    settingLocationType: (v: LocationType) => void;
+   selectPhoto: () => Promise<void>;
+   photo: ImagePickerResult | null;
+   sendRequest: () => Promise<void>;
 };
 
-function Info({ locationType, settingLocationType }: Props) {
+function Info({
+   locationType,
+   settingLocationType,
+   selectPhoto,
+   photo,
+   sendRequest,
+}: Props) {
    const [visible, setVisible] = useState(false);
    const [addPhoto, setAddPhoto] = useState(false);
 
    const onPressAddPhoto = () => {
       setAddPhoto(true);
+      selectPhoto();
    };
 
    const hideMenu = (type?: LocationType) => {
@@ -32,7 +44,7 @@ function Info({ locationType, settingLocationType }: Props) {
    const showMenu = () => setVisible(true);
 
    return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
          <ListItem style={styles.listItem}>
             <View style={styles.listItemHeader}>
                <Text>타입</Text>
@@ -93,13 +105,30 @@ function Info({ locationType, settingLocationType }: Props) {
                </View>
             </ListItem.Content>
          </ListItem>
-      </View>
+         <View style={styles.imageContainer}>
+            {addPhoto && !photo?.cancelled && (
+               <Image
+                  source={{ uri: photo?.uri }}
+                  style={{ width: 200, height: 200, borderRadius: 40 }}
+               />
+            )}
+         </View>
+         <View style={styles.reportContainerView}>
+            <Button
+               title="요청 보내기"
+               containerStyle={styles.reportContainer}
+               color={Colors.colorSet.stGray}
+               onPress={sendRequest}
+            />
+         </View>
+      </ScrollView>
    );
 }
 
 const styles = StyleSheet.create({
    container: {
-      flex: 1,
+      width: "100%",
+      height: "100%",
    },
    listItem: {
       height: 70,
@@ -134,6 +163,21 @@ const styles = StyleSheet.create({
       width: "100%",
       flexDirection: "row",
       justifyContent: "space-around",
+   },
+   imageContainer: {
+      width: "100%",
+      height: 200,
+      marginTop: 10,
+      justifyContent: "center",
+      alignItems: "center",
+   },
+   reportContainerView: {
+      width: "100%",
+      alignItems: "center",
+      marginTop: 20,
+   },
+   reportContainer: {
+      width: 120,
    },
 });
 

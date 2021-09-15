@@ -1,8 +1,8 @@
 import { Region } from "react-native-maps";
 
 export const deltas: { latitudeDelta: number; longitudeDelta: number } = {
-   latitudeDelta: 0.005,
-   longitudeDelta: 0.005,
+   latitudeDelta: 0.003,
+   longitudeDelta: 0.003,
 };
 
 export const centerSchool: Region = {

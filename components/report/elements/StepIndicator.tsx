@@ -31,7 +31,7 @@ const customStyles = {
 
 function StepIndicator({ position }: Props) {
    return (
-      <View style={{ height: 100, margin: 10 }}>
+      <View style={{ height: 70, marginTop: 20, marginBottom: 0 }}>
          <DefaultStepIndicator
             customStyles={customStyles}
             currentPosition={position}

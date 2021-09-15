@@ -3,21 +3,31 @@ import MapView, { Region } from "react-native-maps";
 import PagerView, {
    PagerViewOnPageSelectedEvent,
 } from "react-native-pager-view";
+import { useDispatch } from "react-redux";
 import { INSIDE_SHCOOL } from "../../../constants/Size";
 import { centerSchool, deltas } from "../../../constants/Variables";
-import { LocationType, SMOKE } from "../../../types";
+import { loading, unloading } from "../../../modules/loading";
+import { LocationType, RootStackScreenProps, SMOKE } from "../../../types";
 import getMyLocation from "../../../utils/getMyLocation";
 import Report from "../view/Report";
+import * as ImagePicker from "expo-image-picker";
 
 type Props = {};
 
-function ReportContainer({}: Props) {
+function ReportContainer({
+   navigation,
+}: Props & RootStackScreenProps<"Report">) {
    const [region, setRegion] = useState<Region>(centerSchool);
+   const [refresh, setRefresh] = useState<number>(0);
    const [position, setPosition] = useState<number>(0);
    const [locationType, setLocationType] = useState<LocationType>(SMOKE);
    const mapViewRef = useRef<MapView>() as React.RefObject<MapView>;
    const pagerRef = useRef<PagerView>() as React.RefObject<PagerView>;
+   const [photo, setPhoto] = useState<ImagePicker.ImagePickerResult | null>(
+      null
+   );
 
+   const dispatch = useDispatch();
    useEffect(() => {
       const mainInit = async () => {
          let initialCoords: Region = centerSchool;
@@ -43,7 +53,7 @@ function ReportContainer({}: Props) {
          }
       };
       mainInit();
-   }, []);
+   }, [refresh]);
    const goNext = useCallback((): void => {
       pagerRef.current?.setPage(position + 1);
    }, [pagerRef, position]);
@@ -63,6 +73,48 @@ function ReportContainer({}: Props) {
       setLocationType(v);
    };
 
+   const selectPhoto = async () => {
+      let res = await ImagePicker.getMediaLibraryPermissionsAsync();
+      if (!res.granted) {
+         res = await ImagePicker.requestMediaLibraryPermissionsAsync(false);
+         if (!res.granted) {
+            return;
+         }
+      }
+
+      let result = await ImagePicker.launchImageLibraryAsync({
+         mediaTypes: ImagePicker.MediaTypeOptions.Images,
+         allowsEditing: true,
+         aspect: [4, 4],
+         quality: 1,
+      });
+      if (!result.cancelled) {
+         // 프로필 사진 수정
+         setPhoto(result);
+      }
+   };
+
+   const sendRequest = async () => {
+      dispatch(loading());
+      const obj = {
+         type: locationType,
+         region: region,
+         photo: photo,
+      };
+      goNext();
+      dispatch(unloading());
+   };
+   const gotoHome = () => {
+      navigation.navigate("Root");
+   };
+   const gotoReport = () => {
+      setRefresh((prev) => prev + 1);
+      pagerRef.current?.setPage(0);
+      setPosition(0);
+      setLocationType(SMOKE);
+      setPhoto(null);
+   };
+
    return (
       <Report
          region={region}
@@ -75,6 +127,11 @@ function ReportContainer({}: Props) {
          onAnimateRegion={onAnimateRegion}
          locationType={locationType}
          settingLocationType={settingLocationType}
+         selectPhoto={selectPhoto}
+         photo={photo}
+         sendRequest={sendRequest}
+         gotoHome={gotoHome}
+         gotoReport={gotoReport}
       />
    );
 }
