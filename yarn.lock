@@ -2344,6 +2344,14 @@
     "@types/react" "*"
     "@types/react-native" "*"
 
+"@types/react-native-material-menu@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@types/react-native-material-menu/-/react-native-material-menu-1.0.5.tgz#5ff3657f2d7eb0f7b4bfb2f01a6951117d816734"
+  integrity sha512-i6i3QXxjj2azzY1x7lcK4JCIr0b1DLe/V4+MdoUGdUuWQ4ceHfbDUSkfmgaj+9kKdk68yhUKQIBTfUljC07BDg==
+  dependencies:
+    "@types/react" "*"
+    "@types/react-native" "*"
+
 "@types/react-native-vector-icons@^6.4.6":
   version "6.4.8"
   resolved "https://registry.yarnpkg.com/@types/react-native-vector-icons/-/react-native-vector-icons-6.4.8.tgz#7dd9740f36a71e98c484b9ea12155940c85cedc2"
@@ -7111,6 +7119,11 @@ react-native-maps@^0.29.3:
   integrity sha512-742ipC71NdGHXmrCHPY9SEGDuKoSx2l0RMC1W9WXe/jd6+Eg5OllRBcR6Y+ORnzvuYZrd0Hj6q6bK3QR5ZL8sA==
   dependencies:
     "@types/geojson" "^7946.0.7"
+
+react-native-material-menu@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-material-menu/-/react-native-material-menu-2.0.0.tgz#139f407a52fbc0d47e5351d50ac769e05812da5c"
+  integrity sha512-SmO9PLE3E469EPbVWZqvdu6JGPPZIm7YjqDcWs2PPoY0k7w2V9tFo3BmmLXNzNZDCVCAi+PPSsL7h/5WkfHcSg==
 
 react-native-pager-view@^5.4.1:
   version "5.4.1"

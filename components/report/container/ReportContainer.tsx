@@ -5,6 +5,7 @@ import PagerView, {
 } from "react-native-pager-view";
 import { INSIDE_SHCOOL } from "../../../constants/Size";
 import { centerSchool, deltas } from "../../../constants/Variables";
+import { LocationType, SMOKE } from "../../../types";
 import getMyLocation from "../../../utils/getMyLocation";
 import Report from "../view/Report";
 
@@ -13,6 +14,7 @@ type Props = {};
 function ReportContainer({}: Props) {
    const [region, setRegion] = useState<Region>(centerSchool);
    const [position, setPosition] = useState<number>(0);
+   const [locationType, setLocationType] = useState<LocationType>(SMOKE);
    const mapViewRef = useRef<MapView>() as React.RefObject<MapView>;
    const pagerRef = useRef<PagerView>() as React.RefObject<PagerView>;
 
@@ -57,6 +59,10 @@ function ReportContainer({}: Props) {
       setRegion(reg);
    };
 
+   const settingLocationType = (v: LocationType) => {
+      setLocationType(v);
+   };
+
    return (
       <Report
          region={region}
@@ -67,6 +73,8 @@ function ReportContainer({}: Props) {
          position={position}
          onPageScroll={onPageScroll}
          onAnimateRegion={onAnimateRegion}
+         locationType={locationType}
+         settingLocationType={settingLocationType}
       />
    );
 }

@@ -17,6 +17,7 @@ type Props = {};
 
 function MainContainer({ navigation }: Props & RootStackScreenProps<"Root">) {
    const [myLocation, setMyLocation] = useState<Region>(centerSchool);
+   const [isInsie, setIIsInside] = useState<boolean>(false);
    const [markers, setMarkers] = useState<MarkerType[]>();
    const [region, setRegion] = useState<Region>(centerSchool);
    const [locationType, setLocationType] = useState<LocationType>(SMOKE);
@@ -41,6 +42,7 @@ function MainContainer({ navigation }: Props & RootStackScreenProps<"Root">) {
                   longitude: parsed.longitude,
                   ...deltas,
                };
+               setIIsInside(true);
             }
          } catch (e) {
             initialCoords = centerSchool;

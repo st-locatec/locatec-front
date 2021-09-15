@@ -14,8 +14,10 @@ import {
    SMOKE,
    TRASHCAN,
 } from "../../../types";
+import { smokingPlace, trashcan } from "../../../constants/Strings";
 
 type Props = {
+   isInsie: boolean;
    myLocation: Region;
    markers: MarkerType[] | undefined;
    region: Region;
@@ -31,6 +33,7 @@ type Props = {
 
 function Main({
    myLocation,
+   isInsie,
    markers,
    region,
    mapViewRef,
@@ -52,15 +55,17 @@ function Main({
                key="Gmap"
                style={styles.map}
                onRegionChangeComplete={onAnimateRegion}>
-               <Marker key={`marker`} coordinate={myLocation}>
-                  <View style={[styles.markerWrap]}>
-                     <Image
-                        source={require("../../../assets/images/map_marker.png")}
-                        style={[styles.marker]}
-                        resizeMode="cover"
-                     />
-                  </View>
-               </Marker>
+               {isInsie && (
+                  <Marker key={`marker`} coordinate={myLocation}>
+                     <View style={[styles.markerWrap]}>
+                        <Image
+                           source={require("../../../assets/images/map_marker.png")}
+                           style={[styles.marker]}
+                           resizeMode="cover"
+                        />
+                     </View>
+                  </Marker>
+               )}
                {markers
                   ?.filter((marker: MarkerType) => marker.type === locationType)
                   .map((item: MarkerType, idx: number) => (
@@ -110,7 +115,7 @@ function Main({
                      color: "#fff",
                      type: "font-awesome-5",
                   },
-                  title: "흡연부스",
+                  title: smokingPlace,
                   onPress: () => changeLocationType(SMOKE),
                },
                {
@@ -119,7 +124,7 @@ function Main({
                      color: "#fff",
                      type: "font-awesome-5",
                   },
-                  title: "쓰레기통",
+                  title: trashcan,
                   onPress: () => changeLocationType(TRASHCAN),
                },
             ]}

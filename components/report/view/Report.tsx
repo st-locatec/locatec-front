@@ -4,7 +4,7 @@ import MapView, { Region } from "react-native-maps";
 import PagerView, {
    PagerViewOnPageSelectedEvent,
 } from "react-native-pager-view";
-import { AnimateRegionType } from "../../../types";
+import { AnimateRegionType, LocationType } from "../../../types";
 
 import { Text, View } from "../../Themed";
 import NaviButtons from "../elements/naviButtons";
@@ -21,6 +21,8 @@ type Props = {
    position: number;
    onPageScroll: (e: PagerViewOnPageSelectedEvent) => void;
    onAnimateRegion: AnimateRegionType;
+   locationType: LocationType;
+   settingLocationType: (v: LocationType) => void;
 };
 
 function Report({
@@ -32,6 +34,8 @@ function Report({
    position,
    onPageScroll,
    onAnimateRegion,
+   locationType,
+   settingLocationType,
 }: Props) {
    return (
       <View style={styles.container}>
@@ -50,7 +54,10 @@ function Report({
             </View>
 
             <View key="2" style={{ flex: 1 }}>
-               <Info />
+               <Info
+                  locationType={locationType}
+                  settingLocationType={settingLocationType}
+               />
             </View>
          </PagerView>
 
