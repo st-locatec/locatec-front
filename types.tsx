@@ -44,3 +44,8 @@ export type AnimateRegionType = (
         }
       | undefined
 ) => void;
+
+export const LIGHT = "light" as const;
+export const DARK = "dark" as const;
+
+export type ThemeScheme = typeof LIGHT | typeof DARK;

@@ -10,26 +10,24 @@ import {
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { ColorSchemeName } from "react-native";
-import { Switch } from "react-native-elements";
 
-import useColorScheme from "../hooks/useColorScheme";
 import ReportScreen from "../screens/ReportScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import MainScreen from "../screens/MainScreen";
-import { RootStackParamList, RootStackScreenProps } from "../types";
+import { DARK, RootStackParamList, ThemeScheme } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
 import { appName } from "../constants/Strings";
+import Switch from "../components/elements/Switch";
 
 export default function Navigation({
    colorScheme,
 }: {
-   colorScheme: ColorSchemeName;
+   colorScheme: ThemeScheme;
 }) {
    return (
       <NavigationContainer
          linking={LinkingConfiguration}
-         theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+         theme={colorScheme === DARK ? DarkTheme : DefaultTheme}>
          <RootNavigator />
       </NavigationContainer>
    );
@@ -38,7 +36,6 @@ export default function Navigation({
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
-   const colorScheme = useColorScheme();
    return (
       <Stack.Navigator>
          <Stack.Screen
@@ -46,7 +43,7 @@ function RootNavigator() {
             component={MainScreen}
             options={() => ({
                title: appName,
-               headerRight: () => <Switch value={true} />,
+               headerRight: () => <Switch />,
             })}
          />
          <Stack.Screen
