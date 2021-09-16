@@ -32,6 +32,7 @@ export type LocationType = typeof SMOKE | typeof TRASHCAN;
 export type MarkerType = {
    type: LocationType;
    coords: { latitude: number; longitude: number };
+   image: string;
 };
 
 /* 기타 타입들 */

@@ -11,6 +11,13 @@ import { LocationType, RootStackScreenProps, SMOKE } from "../../../types";
 import getMyLocation from "../../../utils/getMyLocation";
 import Report from "../view/Report";
 import * as ImagePicker from "expo-image-picker";
+import { Alert } from "react-native";
+import {
+   changePhotoContent,
+   changePhotoTitle,
+   NO,
+   YES,
+} from "../../../constants/Strings";
 
 type Props = {};
 
@@ -23,9 +30,12 @@ function ReportContainer({
    const [locationType, setLocationType] = useState<LocationType>(SMOKE);
    const mapViewRef = useRef<MapView>() as React.RefObject<MapView>;
    const pagerRef = useRef<PagerView>() as React.RefObject<PagerView>;
+   const [prevPhoto, setPrevPhoto] =
+      useState<ImagePicker.ImagePickerResult | null>(null);
    const [photo, setPhoto] = useState<ImagePicker.ImagePickerResult | null>(
       null
    );
+   const [addPhoto, setAddPhoto] = useState(false);
 
    const dispatch = useDispatch();
    useEffect(() => {
@@ -73,7 +83,11 @@ function ReportContainer({
       setLocationType(v);
    };
 
-   const selectPhoto = async () => {
+   const settingAddPhoto = (v: boolean) => {
+      setAddPhoto(v);
+   };
+
+   const pickPhoto = async () => {
       let res = await ImagePicker.getMediaLibraryPermissionsAsync();
       if (!res.granted) {
          res = await ImagePicker.requestMediaLibraryPermissionsAsync(false);
@@ -85,12 +99,35 @@ function ReportContainer({
       let result = await ImagePicker.launchImageLibraryAsync({
          mediaTypes: ImagePicker.MediaTypeOptions.Images,
          allowsEditing: true,
-         aspect: [4, 4],
+         aspect: [4, 3],
          quality: 1,
       });
       if (!result.cancelled) {
          // 프로필 사진 수정
          setPhoto(result);
+      } else {
+         setPhoto(prevPhoto);
+      }
+   };
+
+   const selectPhoto = async (v: boolean) => {
+      if (!photo) {
+         await pickPhoto();
+      } else if (v) {
+         Alert.alert(changePhotoTitle, changePhotoContent, [
+            {
+               text: NO,
+               onPress: () => {},
+            },
+            {
+               text: YES,
+               onPress: () => {
+                  setPrevPhoto(photo);
+                  setPhoto(null);
+                  pickPhoto();
+               },
+            },
+         ]);
       }
    };
 
@@ -99,7 +136,7 @@ function ReportContainer({
       const obj = {
          type: locationType,
          region: region,
-         photo: photo,
+         photo: addPhoto ? photo : null,
       };
       goNext();
       dispatch(unloading());
@@ -132,6 +169,8 @@ function ReportContainer({
          sendRequest={sendRequest}
          gotoHome={gotoHome}
          gotoReport={gotoReport}
+         addPhoto={addPhoto}
+         settingAddPhoto={settingAddPhoto}
       />
    );
 }

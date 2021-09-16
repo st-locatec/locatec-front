@@ -1,7 +1,12 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet } from "react-native";
-import MapView, { Marker, PROVIDER_GOOGLE, Region } from "react-native-maps";
-import { View } from "../../Themed";
+import MapView, {
+   Callout,
+   Marker,
+   PROVIDER_GOOGLE,
+   Region,
+} from "react-native-maps";
+import { Text, View } from "../../Themed";
 import Layout from "../../../constants/Layout";
 import { Image } from "react-native-elements";
 import { FLOATING_BUTTON_WIDTH } from "../../../constants/Size";
@@ -15,6 +20,7 @@ import {
    TRASHCAN,
 } from "../../../types";
 import { smokingPlace, trashcan } from "../../../constants/Strings";
+import WebView from "react-native-webview";
 
 type Props = {
    isInsie: boolean;
@@ -45,6 +51,21 @@ function Main({
    changeLocationType,
    animateToClosest,
 }: Props) {
+   const [markerImages, setMarkerImages] = useState();
+
+   useEffect(() => {
+      let obj: any = {};
+      obj["user"] = require(`../../../assets/images/map_marker_user.png`);
+      obj[
+         `${SMOKE}`
+      ] = require(`../../../assets/images/map_marker_smoking.png`);
+      obj[
+         `${TRASHCAN}`
+      ] = require(`../../../assets/images/map_marker_trash.png`);
+
+      setMarkerImages(obj);
+   }, []);
+
    return (
       <View style={{ flex: 1 }}>
          <View style={styles.container}>
@@ -52,33 +73,50 @@ function Main({
                ref={mapViewRef}
                provider={PROVIDER_GOOGLE}
                region={region}
+               showsUserLocation={isInsie ? false : true}
                key="Gmap"
                style={styles.map}
                onRegionChangeComplete={onAnimateRegion}>
-               {isInsie && (
+               {markerImages && isInsie && (
                   <Marker key={`marker`} coordinate={myLocation}>
                      <View style={[styles.markerWrap]}>
                         <Image
-                           source={require("../../../assets/images/map_marker.png")}
+                           source={markerImages["user"]}
                            style={[styles.marker]}
                            resizeMode="cover"
                         />
                      </View>
                   </Marker>
                )}
-               {markers
-                  ?.filter((marker: MarkerType) => marker.type === locationType)
-                  .map((item: MarkerType, idx: number) => (
-                     <Marker key={`marker_${idx}`} coordinate={item.coords}>
-                        <View style={[styles.markerWrap]}>
-                           <Image
-                              source={require("../../../assets/images/map_marker.png")}
-                              style={[styles.marker]}
-                              resizeMode="cover"
-                           />
-                        </View>
-                     </Marker>
-                  ))}
+               {markerImages &&
+                  markers
+                     ?.filter(
+                        (marker: MarkerType) => marker.type === locationType
+                     )
+                     .map((item: MarkerType, idx: number) => (
+                        <Marker key={`marker_${idx}`} coordinate={item.coords}>
+                           <View style={[styles.markerWrap]}>
+                              <Image
+                                 source={markerImages[`${locationType}`]}
+                                 style={[styles.marker]}
+                                 resizeMode="cover"
+                              />
+                           </View>
+                           <Callout tooltip={true}>
+                              <View
+                                 style={[
+                                    styles.calloutSize,
+                                    styles.calloutContainer,
+                                 ]}>
+                                 <WebView
+                                    source={{ uri: item.image }}
+                                    style={[styles.calloutSize]}
+                                    resizeMode="cover"
+                                 />
+                              </View>
+                           </Callout>
+                        </Marker>
+                     ))}
             </MapView>
             <View style={[styles.buttonCol, { left: 0 }]}>
                <FloatingButton
@@ -152,8 +190,8 @@ const styles = StyleSheet.create({
       backgroundColor: "transparent",
    },
    marker: {
-      width: 30,
-      height: 30,
+      width: 40,
+      height: 40,
    },
    buttonCol: {
       position: "absolute",
@@ -164,6 +202,16 @@ const styles = StyleSheet.create({
       paddingLeft: 20,
       paddingRight: 20,
       zIndex: 1,
+   },
+   calloutContainer: {
+      overflow: "hidden",
+      borderWidth: 1,
+      borderColor: Colors.colorSet.stGray,
+   },
+   calloutSize: {
+      width: 120,
+      height: 90,
+      borderRadius: 30,
    },
 });
 

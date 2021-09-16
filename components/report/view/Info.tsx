@@ -5,6 +5,8 @@ import { Icon, Image, ListItem } from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
 import { Menu, MenuItem } from "react-native-material-menu";
 import Colors from "../../../constants/Colors";
+import Layout from "../../../constants/Layout";
+import { REPORT_PHOTO_HEIGHT } from "../../../constants/Size";
 import { locStrArray } from "../../../constants/Strings";
 import { LocationType } from "../../../types";
 import mapLocTypeToStr, {
@@ -12,12 +14,18 @@ import mapLocTypeToStr, {
 } from "../../../utils/mapLocTypeToStr";
 
 import { Button, Text, View } from "../../Themed";
+
+const IMAGE_WIDTH: number = Layout.window.width * 0.8;
+const IMAGE_HEIGHT: number = ((Layout.window.width * 0.8) / 4) * 3;
+
 type Props = {
    locationType: LocationType;
    settingLocationType: (v: LocationType) => void;
-   selectPhoto: () => Promise<void>;
+   selectPhoto: (v: boolean) => Promise<void>;
    photo: ImagePickerResult | null;
    sendRequest: () => Promise<void>;
+   addPhoto: boolean;
+   settingAddPhoto: (v: boolean) => void;
 };
 
 function Info({
@@ -26,13 +34,14 @@ function Info({
    selectPhoto,
    photo,
    sendRequest,
+   addPhoto,
+   settingAddPhoto,
 }: Props) {
    const [visible, setVisible] = useState(false);
-   const [addPhoto, setAddPhoto] = useState(false);
 
    const onPressAddPhoto = () => {
-      setAddPhoto(true);
-      selectPhoto();
+      settingAddPhoto(true);
+      selectPhoto(addPhoto);
    };
 
    const hideMenu = (type?: LocationType) => {
@@ -85,7 +94,7 @@ function Info({
             <ListItem.Content>
                <View style={styles.selectAddButtonContainer}>
                   <Button
-                     title="추가하기"
+                     title={photo && addPhoto ? "변경하기" : "등록하기"}
                      color={
                         addPhoto
                            ? Colors.colorSet.stBlue
@@ -94,13 +103,14 @@ function Info({
                      onPress={onPressAddPhoto}
                   />
                   <Button
-                     title="추가안함"
+                     title="등록안함"
                      color={
                         !addPhoto
                            ? Colors.colorSet.stRed
                            : Colors.colorSet.stGray
                      }
-                     onPress={() => setAddPhoto(false)}
+                     containerStyle={{ marginLeft: 50 }}
+                     onPress={() => settingAddPhoto(false)}
                   />
                </View>
             </ListItem.Content>
@@ -109,7 +119,11 @@ function Info({
             {addPhoto && !photo?.cancelled && (
                <Image
                   source={{ uri: photo?.uri }}
-                  style={{ width: 200, height: 200, borderRadius: 40 }}
+                  style={{
+                     width: IMAGE_WIDTH,
+                     height: IMAGE_HEIGHT,
+                     borderRadius: 40,
+                  }}
                />
             )}
          </View>
@@ -162,11 +176,10 @@ const styles = StyleSheet.create({
    selectAddButtonContainer: {
       width: "100%",
       flexDirection: "row",
-      justifyContent: "space-around",
    },
    imageContainer: {
       width: "100%",
-      height: 200,
+      height: IMAGE_HEIGHT,
       marginTop: 10,
       justifyContent: "center",
       alignItems: "center",

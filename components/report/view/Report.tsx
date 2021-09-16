@@ -25,11 +25,13 @@ type Props = {
    onAnimateRegion: AnimateRegionType;
    locationType: LocationType;
    settingLocationType: (v: LocationType) => void;
-   selectPhoto: () => Promise<void>;
+   selectPhoto: (v: boolean) => Promise<void>;
    photo: ImagePickerResult | null;
    sendRequest: () => Promise<void>;
    gotoHome: () => void;
    gotoReport: () => void;
+   addPhoto: boolean;
+   settingAddPhoto: (v: boolean) => void;
 };
 
 function Report({
@@ -48,6 +50,8 @@ function Report({
    sendRequest,
    gotoHome,
    gotoReport,
+   addPhoto,
+   settingAddPhoto,
 }: Props) {
    return (
       <View style={styles.container}>
@@ -72,6 +76,8 @@ function Report({
                   selectPhoto={selectPhoto}
                   photo={photo}
                   sendRequest={sendRequest}
+                  addPhoto={addPhoto}
+                  settingAddPhoto={settingAddPhoto}
                />
             </View>
             <View key="3" style={{ flex: 1 }}>

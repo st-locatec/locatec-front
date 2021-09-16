@@ -19,6 +19,7 @@ import NotFoundScreen from "../screens/NotFoundScreen";
 import MainScreen from "../screens/MainScreen";
 import { RootStackParamList, RootStackScreenProps } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
+import { appName } from "../constants/Strings";
 
 export default function Navigation({
    colorScheme,
@@ -44,7 +45,7 @@ function RootNavigator() {
             name="Root"
             component={MainScreen}
             options={() => ({
-               title: "앱 이름",
+               title: appName,
                headerRight: () => <Switch value={true} />,
             })}
          />

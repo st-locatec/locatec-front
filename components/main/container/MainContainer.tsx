@@ -27,8 +27,6 @@ function MainContainer({ navigation }: Props & RootStackScreenProps<"Root">) {
    //처음들어오고 학교에서 0.007 이상 벗어난 위도 경도면 학교 중심을, 아니면 본인위치를 보여주기
    useEffect(() => {
       const mainInit = async () => {
-         let initialCoords: Region = centerSchool;
-
          try {
             const parsed = await getMyLocation();
             if (
@@ -37,17 +35,16 @@ function MainContainer({ navigation }: Props & RootStackScreenProps<"Root">) {
                parsed.latitude >= region.latitude - INSIDE_SHCOOL &&
                parsed.longitude >= region.longitude - INSIDE_SHCOOL
             ) {
-               initialCoords = {
+               const initialCoords = {
                   latitude: parsed.latitude,
                   longitude: parsed.longitude,
                   ...deltas,
                };
                setIIsInside(true);
+               setMyLocation(initialCoords);
             }
          } catch (e) {
-            initialCoords = centerSchool;
-         } finally {
-            setMyLocation(initialCoords);
+            // console.log(e);
          }
       };
       mainInit();
@@ -114,6 +111,7 @@ function MainContainer({ navigation }: Props & RootStackScreenProps<"Root">) {
    return (
       <Main
          myLocation={myLocation}
+         isInsie={isInsie}
          markers={markers}
          region={region}
          mapViewRef={mapViewRef}
