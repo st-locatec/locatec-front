@@ -3,21 +3,26 @@ import LottieView from "lottie-react-native";
 import { StyleSheet } from "react-native";
 import { Button, Text, View } from "../../Themed";
 import Colors from "../../../constants/Colors";
+import { LIGHT, ThemeScheme } from "../../../types";
+
+const thanksAnimation_light = require("../../../assets/animations/thanksAnimtaion.json");
+const thanksAnimation_dark = require("../../../assets/animations/lf30_editor_pfhhzoyg.json");
 
 type Props = {
    gotoHome: () => void;
    gotoReport: () => void;
+   theme: ThemeScheme;
 };
 
-function Complete({ gotoHome, gotoReport }: Props) {
+function Complete({ gotoHome, gotoReport, theme }: Props) {
    return (
       <View style={styles.container}>
          <View style={styles.lottieContainer}>
             <LottieView
-               source={require("../../../assets/animations/thanksAnimtaion.json")}
+               source={thanksAnimation_light}
                autoPlay={true}
                loop={true}
-               speed={1.5}
+               speed={1}
             />
          </View>
          <View style={styles.goBackContainer}>

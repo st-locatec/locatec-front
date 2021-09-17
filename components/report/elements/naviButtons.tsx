@@ -1,6 +1,5 @@
 import React from "react";
-import { Button } from "react-native-elements/dist/buttons/Button";
-import { View } from "../../Themed";
+import { View, Button } from "../../Themed";
 
 type Props = {
    position: number;

@@ -10,7 +10,15 @@ import {
    Button as DefaultButton,
    SpeedDialProps,
    SpeedDial as DefaultSpeedDial,
+   ListItemProps,
+   ListItem as DefaultListItem,
+   IconProps,
+   Icon as DefaultIcon,
 } from "react-native-elements";
+import {
+   MenuItemProps,
+   MenuItem as DefaultMenuItem,
+} from "react-native-material-menu";
 import { useSelector } from "react-redux";
 
 import Colors from "../constants/Colors";
@@ -41,6 +49,9 @@ export type ViewProps = ThemeProps & DefaultView["props"];
 export type ThemedButtonProps = ThemeProps & ButtonProps & { color?: string };
 export type ThemedSpeedDialProps = ThemeProps &
    SpeedDialProps & { color?: string; actions?: ButtonProps[] };
+export type ThemedListItem = ThemeProps & ListItemProps;
+export type ThemedIcon = ThemeProps & IconProps;
+export type ThemedMenuItem = ThemeProps & MenuItemProps;
 
 export function Text(props: TextProps) {
    const { style, lightColor, darkColor, ...otherProps } = props;
@@ -60,18 +71,32 @@ export function View(props: ViewProps) {
 }
 
 export function Button(props: ThemedButtonProps) {
-   const { lightColor, darkColor, color, buttonStyle, ...otherProps } = props;
+   const { lightColor, darkColor, color, buttonStyle, type, ...otherProps } =
+      props;
    const backgroundColor = useThemeColor(
       { light: lightColor, dark: darkColor },
       "buttonBackground"
    );
+   const titleColor = useThemeColor(
+      { light: lightColor, dark: darkColor },
+      "buttonTitle"
+   );
 
    return (
       <DefaultButton
-         buttonStyle={[
-            buttonStyle,
-            { backgroundColor: color ? color : backgroundColor },
-         ]}
+         type={type}
+         {...(() => {
+            if (type === "clear") {
+               return { titleStyle: { color: titleColor } };
+            } else {
+               return {
+                  buttonStyle: [
+                     buttonStyle,
+                     { backgroundColor: color ? color : backgroundColor },
+                  ],
+               };
+            }
+         })()}
          {...otherProps}
       />
    );
@@ -117,5 +142,53 @@ export function SpeedDial(props: ThemedSpeedDialProps) {
             />
          ))}
       </DefaultSpeedDial>
+   );
+}
+
+export function ListItem(props: ThemedListItem) {
+   const { lightColor, darkColor, containerStyle, children, ...otherProps } =
+      props;
+
+   const backgroundColor = useThemeColor(
+      { light: lightColor, dark: darkColor },
+      "background"
+   );
+
+   return (
+      <DefaultListItem
+         containerStyle={[containerStyle, { backgroundColor: backgroundColor }]}
+         {...otherProps}>
+         {children}
+      </DefaultListItem>
+   );
+}
+
+export function Icon(props: ThemedIcon) {
+   const { lightColor, darkColor, ...otherProps } = props;
+
+   const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
+   return <DefaultIcon color={color} {...otherProps} />;
+}
+
+export function MenuItem(props: ThemedMenuItem) {
+   const { lightColor, darkColor, children, ...otherProps } = props;
+
+   const backgroundColor = useThemeColor(
+      { light: lightColor, dark: darkColor },
+      "background"
+   );
+   const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
+
+   return (
+      <DefaultMenuItem
+         style={{
+            backgroundColor: backgroundColor,
+            borderWidth: 1,
+            borderColor: "white",
+         }}
+         textStyle={{ color: color }}
+         {...otherProps}>
+         {children}
+      </DefaultMenuItem>
    );
 }

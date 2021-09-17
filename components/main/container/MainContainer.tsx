@@ -53,7 +53,7 @@ function MainContainer({ navigation }: Props & RootStackScreenProps<"Root">) {
 
    useEffect(() => {
       if (myLocation) {
-         mapViewRef.current?.animateToRegion(myLocation, 1000);
+         // mapViewRef.current?.animateToRegion(myLocation, 1000);
       }
    }, [myLocation]);
 

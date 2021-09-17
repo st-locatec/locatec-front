@@ -10,6 +10,7 @@ export default {
       tabIconDefault: "#ccc",
       tabIconSelected: tintColorLight,
       buttonBackground: buttonBackgroundColor,
+      buttonTitle: "black",
    },
    dark: {
       text: "#fff",
@@ -18,6 +19,7 @@ export default {
       tabIconDefault: "#ccc",
       tabIconSelected: tintColorDark,
       buttonBackground: buttonBackgroundColor,
+      buttonTitle: "white",
    },
    colorSet: {
       stRed: "rgba(185, 0, 5, 87)",

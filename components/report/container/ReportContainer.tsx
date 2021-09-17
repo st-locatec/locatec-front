@@ -3,7 +3,7 @@ import MapView, { Region } from "react-native-maps";
 import PagerView, {
    PagerViewOnPageSelectedEvent,
 } from "react-native-pager-view";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { INSIDE_SHCOOL } from "../../../constants/Size";
 import { centerSchool, deltas } from "../../../constants/Variables";
 import { loading, unloading } from "../../../modules/loading";
@@ -18,6 +18,7 @@ import {
    NO,
    YES,
 } from "../../../constants/Strings";
+import { RootState } from "../../../modules";
 
 type Props = {};
 
@@ -36,8 +37,9 @@ function ReportContainer({
       null
    );
    const [addPhoto, setAddPhoto] = useState(false);
-
+   const theme = useSelector(({ theme }: RootState) => theme);
    const dispatch = useDispatch();
+
    useEffect(() => {
       const mainInit = async () => {
          let initialCoords: Region = centerSchool;
@@ -171,6 +173,7 @@ function ReportContainer({
          gotoReport={gotoReport}
          addPhoto={addPhoto}
          settingAddPhoto={settingAddPhoto}
+         theme={theme}
       />
    );
 }

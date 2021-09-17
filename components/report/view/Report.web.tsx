@@ -5,7 +5,7 @@ import MapView, { Region } from "react-native-maps";
 import PagerView, {
    PagerViewOnPageSelectedEvent,
 } from "react-native-pager-view";
-import { AnimateRegionType, LocationType } from "../../../types";
+import { AnimateRegionType, LocationType, ThemeScheme } from "../../../types";
 
 import { Text, View } from "../../Themed";
 import NaviButtons from "../elements/naviButtons";
@@ -32,6 +32,7 @@ type Props = {
    gotoReport: () => void;
    addPhoto: boolean;
    settingAddPhoto: (v: boolean) => void;
+   theme: ThemeScheme;
 };
 
 function Report({
@@ -52,38 +53,11 @@ function Report({
    gotoReport,
    addPhoto,
    settingAddPhoto,
+   theme,
 }: Props) {
    return (
       <View style={styles.container}>
          <StepIndicator position={position} />
-         <PagerView
-            ref={pagerRef}
-            style={{ flex: 1 }}
-            initialPage={0}
-            onPageSelected={onPageScroll}>
-            <View key="1" style={{ flex: 1 }}>
-               <Map
-                  region={region}
-                  mapViewRef={mapViewRef}
-                  onAnimateRegion={onAnimateRegion}
-               />
-            </View>
-
-            <View key="2" style={{ flex: 1 }}>
-               <Info
-                  locationType={locationType}
-                  settingLocationType={settingLocationType}
-                  selectPhoto={selectPhoto}
-                  photo={photo}
-                  sendRequest={sendRequest}
-                  addPhoto={addPhoto}
-                  settingAddPhoto={settingAddPhoto}
-               />
-            </View>
-            <View key="3" style={{ flex: 1 }}>
-               <Complete gotoHome={gotoHome} gotoReport={gotoReport} />
-            </View>
-         </PagerView>
 
          <View style={{ height: 50 }}>
             {position !== 2 && (

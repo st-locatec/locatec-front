@@ -1,19 +1,18 @@
 import { ImagePickerResult } from "expo-image-picker";
 import React, { useState } from "react";
 import { Pressable, StyleSheet } from "react-native";
-import { Icon, Image, ListItem } from "react-native-elements";
+import { Image } from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
-import { Menu, MenuItem } from "react-native-material-menu";
+import { Menu } from "react-native-material-menu";
 import Colors from "../../../constants/Colors";
 import Layout from "../../../constants/Layout";
-import { REPORT_PHOTO_HEIGHT } from "../../../constants/Size";
 import { locStrArray } from "../../../constants/Strings";
 import { LocationType } from "../../../types";
 import mapLocTypeToStr, {
    mapStrToLocType,
 } from "../../../utils/mapLocTypeToStr";
 
-import { Button, Text, View } from "../../Themed";
+import { Button, ListItem, Text, View, Icon, MenuItem } from "../../Themed";
 
 const IMAGE_WIDTH: number = Layout.window.width * 0.8;
 const IMAGE_HEIGHT: number = ((Layout.window.width * 0.8) / 4) * 3;
@@ -54,11 +53,11 @@ function Info({
 
    return (
       <ScrollView style={styles.container}>
-         <ListItem style={styles.listItem}>
+         <ListItem containerStyle={styles.listItem}>
             <View style={styles.listItemHeader}>
                <Text>타입</Text>
             </View>
-            <ListItem.Content>
+            <View>
                <Menu
                   visible={visible}
                   anchor={
@@ -85,13 +84,13 @@ function Info({
                      </MenuItem>
                   ))}
                </Menu>
-            </ListItem.Content>
+            </View>
          </ListItem>
-         <ListItem style={styles.listItem}>
+         <ListItem containerStyle={styles.listItem}>
             <View style={styles.listItemHeader}>
                <Text>사진</Text>
             </View>
-            <ListItem.Content>
+            <View>
                <View style={styles.selectAddButtonContainer}>
                   <Button
                      title={photo && addPhoto ? "변경하기" : "등록하기"}
@@ -113,7 +112,7 @@ function Info({
                      onPress={() => settingAddPhoto(false)}
                   />
                </View>
-            </ListItem.Content>
+            </View>
          </ListItem>
          <View style={styles.imageContainer}>
             {addPhoto && !photo?.cancelled && (
@@ -146,6 +145,7 @@ const styles = StyleSheet.create({
    },
    listItem: {
       height: 70,
+      backgroundColor: "black",
    },
    listItemHeader: {
       width: 80,
@@ -156,6 +156,8 @@ const styles = StyleSheet.create({
    anchorContainer: {
       width: 150,
       height: "100%",
+      borderWidth: 1,
+      borderColor: Colors.colorSet.stGray,
       shadowColor: "#000",
       shadowOffset: {
          width: 0,

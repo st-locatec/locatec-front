@@ -20,6 +20,6 @@ export default function themeReducer(
       case SET_THEME:
          return action.value;
       default:
-         return LIGHT;
+         return state;
    }
 }
