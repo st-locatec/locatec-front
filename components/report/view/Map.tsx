@@ -4,21 +4,22 @@ import { Image } from "react-native-elements";
 import MapView, { Marker, PROVIDER_GOOGLE, Region } from "react-native-maps";
 import Layout from "../../../constants/Layout";
 import { MARKER_SIZE } from "../../../constants/Size";
-import { AnimateRegionType } from "../../../types";
+import { AnimateRegionType, CoordType } from "../../../types";
 import { Text, View } from "../../Themed";
 
 type Props = {
    region: Region;
    mapViewRef: React.RefObject<MapView>;
+   onPressMap: (coord: CoordType) => void;
    onAnimateRegion: AnimateRegionType;
 };
 
-function Map({ region, mapViewRef, onAnimateRegion }: Props) {
+function Map({ region, mapViewRef, onPressMap, onAnimateRegion }: Props) {
    return (
       <View style={styles.container}>
          <View style={styles.labelContainer}>
             <Text style={styles.label}>
-               지도를 움직여서 위치를 선택해주세요.
+               지도를 클릭해서 위치를 선택해주세요.
             </Text>
          </View>
          <View style={styles.mapContaienr}>
@@ -28,14 +29,18 @@ function Map({ region, mapViewRef, onAnimateRegion }: Props) {
                region={region}
                key="Gmap"
                style={styles.map}
-               onRegionChangeComplete={onAnimateRegion}></MapView>
-            <View style={[styles.markerWrap]}>
-               <Image
-                  source={require("../../../assets/images/map_marker.png")}
-                  style={[styles.marker]}
-                  resizeMode="cover"
-               />
-            </View>
+               onRegionChangeComplete={onAnimateRegion}
+               onPress={(e) => onPressMap(e.nativeEvent.coordinate)}>
+               <Marker key={`marker`} coordinate={region}>
+                  <View style={[styles.markerWrap]}>
+                     <Image
+                        source={require("../../../assets/images/map_marker.png")}
+                        style={[styles.marker]}
+                        resizeMode="cover"
+                     />
+                  </View>
+               </Marker>
+            </MapView>
          </View>
       </View>
    );
@@ -62,12 +67,6 @@ const styles = StyleSheet.create({
       zIndex: 1,
    },
    markerWrap: {
-      position: "absolute",
-      left: "50%",
-      paddingRight: MARKER_SIZE / 2,
-      bottom: "50%",
-      paddingTop: MARKER_SIZE / 2,
-
       alignItems: "center",
       justifyContent: "center",
       width: MARKER_SIZE,
@@ -81,4 +80,4 @@ const styles = StyleSheet.create({
    },
 });
 
-export default Map;
+export default React.memo(Map);

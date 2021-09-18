@@ -57,7 +57,12 @@ export function Text(props: TextProps) {
    const { style, lightColor, darkColor, ...otherProps } = props;
    const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
 
-   return <DefaultText style={[{ color }, style]} {...otherProps} />;
+   return (
+      <DefaultText
+         style={[{ color }, style, { fontFamily: "notosans" }]}
+         {...otherProps}
+      />
+   );
 }
 
 export function View(props: ViewProps) {
@@ -71,8 +76,15 @@ export function View(props: ViewProps) {
 }
 
 export function Button(props: ThemedButtonProps) {
-   const { lightColor, darkColor, color, buttonStyle, type, ...otherProps } =
-      props;
+   const {
+      lightColor,
+      darkColor,
+      color,
+      buttonStyle,
+      type,
+      titleStyle,
+      ...otherProps
+   } = props;
    const backgroundColor = useThemeColor(
       { light: lightColor, dark: darkColor },
       "buttonBackground"
@@ -82,17 +94,27 @@ export function Button(props: ThemedButtonProps) {
       "buttonTitle"
    );
 
+   const font = {
+      fontFamily: "notosans",
+   };
+
    return (
       <DefaultButton
          type={type}
+         titleStyle={[font, titleStyle]}
          {...(() => {
             if (type === "clear") {
-               return { titleStyle: { color: titleColor } };
+               return {
+                  titleStyle: [{ color: titleColor, ...font }, titleStyle],
+               };
             } else {
                return {
                   buttonStyle: [
                      buttonStyle,
-                     { backgroundColor: color ? color : backgroundColor },
+                     {
+                        backgroundColor: color ? color : backgroundColor,
+                        height: 50,
+                     },
                   ],
                };
             }
@@ -183,8 +205,6 @@ export function MenuItem(props: ThemedMenuItem) {
       <DefaultMenuItem
          style={{
             backgroundColor: backgroundColor,
-            borderWidth: 1,
-            borderColor: "white",
          }}
          textStyle={{ color: color }}
          {...otherProps}>

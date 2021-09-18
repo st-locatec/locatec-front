@@ -23,7 +23,7 @@ sagaMiddleware.run(rootSaga);
 
 export default function RootApp() {
    return (
-      <SafeAreaProvider>
+      <SafeAreaProvider style={{ flex: 1 }}>
          <Provider store={store}>
             <App />
          </Provider>

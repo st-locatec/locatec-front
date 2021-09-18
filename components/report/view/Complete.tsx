@@ -22,7 +22,7 @@ function Complete({ gotoHome, gotoReport, theme }: Props) {
                source={thanksAnimation_light}
                autoPlay={true}
                loop={true}
-               speed={1}
+               speed={1.5}
             />
          </View>
          <View style={styles.goBackContainer}>

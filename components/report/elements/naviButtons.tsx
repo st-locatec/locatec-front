@@ -1,4 +1,5 @@
 import React from "react";
+import { isWeb } from "../../../constants/Variables";
 import { View, Button } from "../../Themed";
 
 type Props = {
@@ -14,7 +15,7 @@ function NaviButtons({ goNext, goPrev, position, last }: Props) {
          style={{
             width: "100%",
             flexDirection: "row",
-            padding: 20,
+            padding: isWeb ? 0 : 20,
          }}>
          {position !== 0 && (
             <Button

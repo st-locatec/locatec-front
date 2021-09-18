@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../modules";
 import { setTheme } from "../../modules/theme";
 import { DARK, LIGHT, ThemeScheme } from "../../types";
+import { View } from "../Themed";
 
 export default function Switch() {
    const [value, setValue] = useState(true);
@@ -27,5 +28,9 @@ export default function Switch() {
       dispatch(setTheme(theme));
    };
 
-   return <DefaultSwitch value={value} onValueChange={onPress} />;
+   return (
+      <View style={{ backgroundColor: "transparent", width: 50 }}>
+         <DefaultSwitch value={value} onValueChange={onPress} />
+      </View>
+   );
 }

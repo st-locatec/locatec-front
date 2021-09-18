@@ -1,15 +1,10 @@
-/**
- * If you are not familiar with React Navigation, refer to the "Fundamentals" guide:
- * https://reactnavigation.org/docs/getting-started
- *
- */
 import {
    NavigationContainer,
    DefaultTheme,
    DarkTheme,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import * as React from "react";
+import React from "react";
 
 import ReportScreen from "../screens/ReportScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
@@ -39,7 +34,7 @@ function RootNavigator() {
    return (
       <Stack.Navigator>
          <Stack.Screen
-            name="Root"
+            name="Main"
             component={MainScreen}
             options={() => ({
                title: appName,
@@ -49,13 +44,14 @@ function RootNavigator() {
          <Stack.Screen
             name="NotFound"
             component={NotFoundScreen}
-            options={{ title: "Oops!" }}
+            options={{ title: "여긴 어디?" }}
          />
          <Stack.Screen
             name="Report"
             component={ReportScreen}
             options={{
                title: "추가 요청",
+               headerTitleStyle: { fontFamily: "notosans" },
             }}
          />
       </Stack.Navigator>

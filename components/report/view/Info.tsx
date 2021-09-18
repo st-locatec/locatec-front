@@ -1,27 +1,29 @@
 import { ImagePickerResult } from "expo-image-picker";
-import React, { useState } from "react";
-import { Pressable, StyleSheet } from "react-native";
+import React from "react";
+import { StyleSheet } from "react-native";
 import { Image } from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
-import { Menu } from "react-native-material-menu";
 import Colors from "../../../constants/Colors";
 import Layout from "../../../constants/Layout";
-import { locStrArray } from "../../../constants/Strings";
-import { LocationType } from "../../../types";
-import mapLocTypeToStr, {
-   mapStrToLocType,
-} from "../../../utils/mapLocTypeToStr";
+import {
+   MENU_ITEM_HEIGHT,
+   WEB_REPORT_CONTENT_WIDTH,
+} from "../../../constants/Size";
+import { isWeb } from "../../../constants/Variables";
+import { ImageLibraryReturn, LocationType } from "../../../types";
 
-import { Button, ListItem, Text, View, Icon, MenuItem } from "../../Themed";
+import { Button, ListItem, Text, View } from "../../Themed";
+import Menu from "../elements/Menu";
 
-const IMAGE_WIDTH: number = Layout.window.width * 0.8;
-const IMAGE_HEIGHT: number = ((Layout.window.width * 0.8) / 4) * 3;
+const width = isWeb ? WEB_REPORT_CONTENT_WIDTH : Layout.window.width;
+const IMAGE_WIDTH: number = width * 0.8;
+const IMAGE_HEIGHT: number = ((width * 0.8) / 4) * 3;
 
 type Props = {
    locationType: LocationType;
    settingLocationType: (v: LocationType) => void;
    selectPhoto: (v: boolean) => Promise<void>;
-   photo: ImagePickerResult | null;
+   photo: ImageLibraryReturn;
    sendRequest: () => Promise<void>;
    addPhoto: boolean;
    settingAddPhoto: (v: boolean) => void;
@@ -36,20 +38,10 @@ function Info({
    addPhoto,
    settingAddPhoto,
 }: Props) {
-   const [visible, setVisible] = useState(false);
-
    const onPressAddPhoto = () => {
       settingAddPhoto(true);
       selectPhoto(addPhoto);
    };
-
-   const hideMenu = (type?: LocationType) => {
-      setVisible(false);
-      if (type) {
-         settingLocationType(type);
-      }
-   };
-   const showMenu = () => setVisible(true);
 
    return (
       <ScrollView style={styles.container}>
@@ -59,65 +51,40 @@ function Info({
             </View>
             <View>
                <Menu
-                  visible={visible}
-                  anchor={
-                     <View style={styles.anchorContainer}>
-                        <Pressable
-                           style={styles.anchorStyle}
-                           onPress={showMenu}>
-                           <Text>{mapLocTypeToStr(locationType)}</Text>
-                           <Icon
-                              name="sort-down"
-                              type="font-awesome"
-                              size={10}
-                           />
-                        </Pressable>
-                     </View>
-                  }
-                  style={styles.menuStyle}
-                  onRequestClose={hideMenu}>
-                  {locStrArray.map((item, idx) => (
-                     <MenuItem
-                        key={idx}
-                        onPress={() => hideMenu(mapStrToLocType(item))}>
-                        {item}
-                     </MenuItem>
-                  ))}
-               </Menu>
+                  locationType={locationType}
+                  settingLocationType={settingLocationType}
+               />
             </View>
          </ListItem>
          <ListItem containerStyle={styles.listItem}>
             <View style={styles.listItemHeader}>
                <Text>사진</Text>
             </View>
-            <View>
-               <View style={styles.selectAddButtonContainer}>
-                  <Button
-                     title={photo && addPhoto ? "변경하기" : "등록하기"}
-                     color={
-                        addPhoto
-                           ? Colors.colorSet.stBlue
-                           : Colors.colorSet.stGray
-                     }
-                     onPress={onPressAddPhoto}
-                  />
-                  <Button
-                     title="등록안함"
-                     color={
-                        !addPhoto
-                           ? Colors.colorSet.stRed
-                           : Colors.colorSet.stGray
-                     }
-                     containerStyle={{ marginLeft: 50 }}
-                     onPress={() => settingAddPhoto(false)}
-                  />
-               </View>
+            <View style={styles.selectAddButtonContainer}>
+               <Button
+                  title={photo && addPhoto ? "변경하기" : "등록하기"}
+                  color={
+                     addPhoto ? Colors.colorSet.stBlue : Colors.colorSet.stGray
+                  }
+                  containerStyle={{ height: 50 }}
+                  buttonStyle={{ height: 50 }}
+                  onPress={onPressAddPhoto}
+               />
+               <Button
+                  title="등록안함"
+                  color={
+                     !addPhoto ? Colors.colorSet.stRed : Colors.colorSet.stGray
+                  }
+                  buttonStyle={{ height: 50 }}
+                  containerStyle={{ height: 50, marginLeft: 50 }}
+                  onPress={() => settingAddPhoto(false)}
+               />
             </View>
          </ListItem>
          <View style={styles.imageContainer}>
-            {addPhoto && !photo?.cancelled && (
+            {addPhoto && !photo?.cancelled && photo?.uri && (
                <Image
-                  source={{ uri: photo?.uri }}
+                  source={{ uri: photo.uri }}
                   style={{
                      width: IMAGE_WIDTH,
                      height: IMAGE_HEIGHT,
@@ -150,33 +117,9 @@ const styles = StyleSheet.create({
    listItemHeader: {
       width: 80,
    },
-   menuStyle: {
-      width: 150,
-   },
-   anchorContainer: {
-      width: 150,
-      height: "100%",
-      borderWidth: 1,
-      borderColor: Colors.colorSet.stGray,
-      shadowColor: "#000",
-      shadowOffset: {
-         width: 0,
-         height: 1,
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-
-      elevation: 2,
-   },
-   anchorStyle: {
-      flexDirection: "row",
-      justifyContent: "space-around",
-      alignItems: "center",
-      width: "100%",
-      height: "100%",
-   },
    selectAddButtonContainer: {
       width: "100%",
+      height: MENU_ITEM_HEIGHT,
       flexDirection: "row",
    },
    imageContainer: {

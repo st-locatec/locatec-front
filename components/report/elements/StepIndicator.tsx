@@ -2,7 +2,9 @@ import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 
 import DefaultStepIndicator from "react-native-step-indicator";
+import { WEB_REPORT_CONTENT_WIDTH } from "../../../constants/Size";
 import { report_stepIndicator } from "../../../constants/Strings";
+import { isWeb } from "../../../constants/Variables";
 
 type Props = {
    position: number;
@@ -31,7 +33,13 @@ const customStyles = {
 
 function StepIndicator({ position }: Props) {
    return (
-      <View style={{ height: 70, marginTop: 20, marginBottom: 0 }}>
+      <View
+         style={{
+            width: isWeb ? WEB_REPORT_CONTENT_WIDTH : "100%",
+            height: 70,
+            marginTop: 20,
+            marginBottom: 0,
+         }}>
          <DefaultStepIndicator
             customStyles={customStyles}
             currentPosition={position}
@@ -41,14 +49,5 @@ function StepIndicator({ position }: Props) {
       </View>
    );
 }
-
-const styles = StyleSheet.create({
-   container: {
-      flex: 1,
-      backgroundColor: "#fff",
-      alignItems: "center",
-      justifyContent: "center",
-   },
-});
 
 export default StepIndicator;

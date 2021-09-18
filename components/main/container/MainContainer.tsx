@@ -15,7 +15,7 @@ import getMyLocation from "../../../utils/getMyLocation";
 
 type Props = {};
 
-function MainContainer({ navigation }: Props & RootStackScreenProps<"Root">) {
+function MainContainer({ navigation }: Props & RootStackScreenProps<"Main">) {
    const [myLocation, setMyLocation] = useState<Region>(centerSchool);
    const [isInsie, setIIsInside] = useState<boolean>(false);
    const [markers, setMarkers] = useState<MarkerType[]>();
@@ -53,7 +53,7 @@ function MainContainer({ navigation }: Props & RootStackScreenProps<"Root">) {
 
    useEffect(() => {
       if (myLocation) {
-         // mapViewRef.current?.animateToRegion(myLocation, 1000);
+         mapViewRef.current?.animateToRegion(myLocation, 1000);
       }
    }, [myLocation]);
 

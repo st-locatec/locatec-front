@@ -1,4 +1,7 @@
+import { Platform } from "react-native";
 import { Region } from "react-native-maps";
+
+export const isWeb: boolean = Platform.OS === "web" ? true : false;
 
 export const deltas: { latitudeDelta: number; longitudeDelta: number } = {
    latitudeDelta: 0.003,

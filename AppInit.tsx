@@ -16,7 +16,7 @@ function AppInit({ children }: ViewProps) {
       try {
          // Load fonts
          await Font.loadAsync({
-            ...FontAwesome.font,
+            notosans: require("./assets/fonts/NotoSansKR-Regular.otf"),
          });
 
          // 테마
@@ -42,8 +42,7 @@ function AppInit({ children }: ViewProps) {
          />
       );
    }
-
-   return <View style={{ flex: 1 }}>{children}</View>;
+   return <View style={{ height: "100%", width: "100%" }}>{children}</View>;
 }
 
 export default AppInit;

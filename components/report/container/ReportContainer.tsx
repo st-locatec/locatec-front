@@ -5,9 +5,14 @@ import PagerView, {
 } from "react-native-pager-view";
 import { useDispatch, useSelector } from "react-redux";
 import { INSIDE_SHCOOL } from "../../../constants/Size";
-import { centerSchool, deltas } from "../../../constants/Variables";
+import { centerSchool, deltas, isWeb } from "../../../constants/Variables";
 import { loading, unloading } from "../../../modules/loading";
-import { LocationType, RootStackScreenProps, SMOKE } from "../../../types";
+import {
+   CoordType,
+   LocationType,
+   RootStackScreenProps,
+   SMOKE,
+} from "../../../types";
 import getMyLocation from "../../../utils/getMyLocation";
 import Report from "../view/Report";
 import * as ImagePicker from "expo-image-picker";
@@ -66,6 +71,7 @@ function ReportContainer({
       };
       mainInit();
    }, [refresh]);
+
    const goNext = useCallback((): void => {
       pagerRef.current?.setPage(position + 1);
    }, [pagerRef, position]);
@@ -77,10 +83,6 @@ function ReportContainer({
       setPosition(e.nativeEvent.position);
    }, []);
 
-   const onAnimateRegion = (reg: Region) => {
-      setRegion(reg);
-   };
-
    const settingLocationType = (v: LocationType) => {
       setLocationType(v);
    };
@@ -88,7 +90,18 @@ function ReportContainer({
    const settingAddPhoto = (v: boolean) => {
       setAddPhoto(v);
    };
-
+   const onAnimateRegion = (
+      reg: Region,
+      details?:
+         | {
+              isGesture: boolean;
+           }
+         | undefined
+   ) => {
+      if (!details?.isGesture) {
+         setRegion(reg);
+      }
+   };
    const pickPhoto = async () => {
       let res = await ImagePicker.getMediaLibraryPermissionsAsync();
       if (!res.granted) {
@@ -144,7 +157,7 @@ function ReportContainer({
       dispatch(unloading());
    };
    const gotoHome = () => {
-      navigation.navigate("Root");
+      navigation.navigate("Main");
    };
    const gotoReport = () => {
       setRefresh((prev) => prev + 1);
@@ -152,6 +165,10 @@ function ReportContainer({
       setPosition(0);
       setLocationType(SMOKE);
       setPhoto(null);
+   };
+   const onPressMap = (coordinate: CoordType) => {
+      console.log(coordinate);
+      mapViewRef.current?.animateToRegion({ ...coordinate, ...deltas }, 500);
    };
 
    return (
@@ -163,7 +180,6 @@ function ReportContainer({
          goPrev={goPrev}
          position={position}
          onPageScroll={onPageScroll}
-         onAnimateRegion={onAnimateRegion}
          locationType={locationType}
          settingLocationType={settingLocationType}
          selectPhoto={selectPhoto}
@@ -172,8 +188,10 @@ function ReportContainer({
          gotoHome={gotoHome}
          gotoReport={gotoReport}
          addPhoto={addPhoto}
+         onAnimateRegion={onAnimateRegion}
          settingAddPhoto={settingAddPhoto}
          theme={theme}
+         onPressMap={onPressMap}
       />
    );
 }

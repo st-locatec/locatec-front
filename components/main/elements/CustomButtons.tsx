@@ -24,18 +24,21 @@ export function FloatingButton({ color, ...otherProps }: ThemedButtonProps) {
 export function CustomSpeedDial({
    color,
    actions,
+   buttonStyle,
+   containerStyle,
    ...otherProps
 }: ThemedSpeedDialProps) {
    return (
       <SpeedDial
-         buttonStyle={[styles.buttonStyle]}
-         containerStyle={[styles.buttonContainer]}
+         buttonStyle={[styles.buttonStyle, buttonStyle]}
+         containerStyle={[styles.buttonContainer, containerStyle]}
          color={color}
          actions={actions?.map((item) => ({
             ...item,
-            containerStyle: styles.actionButtonContainer,
-            buttonStyle: styles.actionButtonStyle,
+            containerStyle: [styles.actionButtonContainer, item.containerStyle],
+            buttonStyle: [styles.actionButtonStyle, item.buttonStyle],
          }))}
+         raised
          {...otherProps}
       />
    );
