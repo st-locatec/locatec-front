@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { Image } from "react-native-elements";
 import MapView, { Marker, PROVIDER_GOOGLE, Region } from "react-native-maps";
-import Layout from "../../../constants/Layout";
+import useLayout, { LayoutType } from "../../../hooks/useLayout";
 import { MARKER_SIZE } from "../../../constants/Size";
 import { AnimateRegionType, CoordType } from "../../../types";
 import { Text, View } from "../../Themed";
@@ -15,6 +15,7 @@ type Props = {
 };
 
 function Map({ region, mapViewRef, onPressMap, onAnimateRegion }: Props) {
+   const layout = useLayout();
    return (
       <View style={styles.container}>
          <View style={styles.labelContainer}>
@@ -28,7 +29,7 @@ function Map({ region, mapViewRef, onPressMap, onAnimateRegion }: Props) {
                provider={PROVIDER_GOOGLE}
                region={region}
                key="Gmap"
-               style={styles.map}
+               style={stylesFunc(layout).map}
                onRegionChangeComplete={onAnimateRegion}
                onPress={(e) => onPressMap(e.nativeEvent.coordinate)}>
                <Marker key={`marker`} coordinate={region}>
@@ -46,6 +47,15 @@ function Map({ region, mapViewRef, onPressMap, onAnimateRegion }: Props) {
    );
 }
 
+const stylesFunc = (layout: LayoutType) =>
+   StyleSheet.create({
+      map: {
+         width: layout.window.width,
+         height: "100%",
+         zIndex: 1,
+      },
+   });
+
 const styles = StyleSheet.create({
    container: {
       flex: 1,
@@ -59,12 +69,8 @@ const styles = StyleSheet.create({
       margin: 10,
    },
    mapContaienr: {
+      width: "100%",
       height: "70%",
-   },
-   map: {
-      width: Layout.window.width,
-      height: "100%",
-      zIndex: 1,
    },
    markerWrap: {
       alignItems: "center",

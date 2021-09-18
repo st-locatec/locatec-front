@@ -15,11 +15,11 @@ import Complete from "./Complete";
 import Info from "./Info";
 import Map from "./Map.web";
 import { SwiperFlatList } from "react-native-swiper-flatlist";
-import Layout from "../../../constants/Layout";
 import {
    NAV_HEADER_HEIGHT,
    WEB_REPORT_CONTENT_WIDTH,
 } from "../../../constants/Size";
+import useLayout, { LayoutType } from "../../../hooks/useLayout";
 
 type Props = {
    region: Region;
@@ -59,43 +59,38 @@ function Report({
    settingAddPhoto,
    theme,
 }: Props) {
+   const layout = useLayout();
+
+   const contentArray = [
+      <Map region={region} mapViewRef={mapViewRef} />,
+      <Info
+         locationType={locationType}
+         settingLocationType={settingLocationType}
+         selectPhoto={selectPhoto}
+         photo={photo}
+         sendRequest={sendRequest}
+         addPhoto={addPhoto}
+         settingAddPhoto={settingAddPhoto}
+      />,
+      <Complete gotoHome={gotoHome} gotoReport={gotoReport} theme={theme} />,
+   ];
+
    return (
       <View style={styles.container}>
          <View style={{ alignItems: "center" }}>
             <StepIndicator position={position} />
          </View>
          <SwiperFlatList ref={pagerRef} index={0} disableGesture={true}>
-            <View key="1" style={[styles.pagerChildCaontainer]}>
-               <View style={styles.pageChildInside}>
-                  <Map region={region} mapViewRef={mapViewRef} />
+            {contentArray.map((item, idx) => (
+               <View
+                  key={`flaylist_content_${idx}`}
+                  style={[stylesFunc(layout).pagerChildCaontainer]}>
+                  <View style={stylesFunc(layout).pageChildInside}>{item}</View>
                </View>
-            </View>
-            <View key="2" style={[styles.pagerChildCaontainer]}>
-               <View style={styles.pageChildInside}>
-                  <Info
-                     locationType={locationType}
-                     settingLocationType={settingLocationType}
-                     selectPhoto={selectPhoto}
-                     photo={photo}
-                     sendRequest={sendRequest}
-                     addPhoto={addPhoto}
-                     settingAddPhoto={settingAddPhoto}
-                  />
-               </View>
-            </View>
-            <View key="3" style={[styles.pagerChildCaontainer]}>
-               <View style={styles.pageChildInside}>
-                  <Complete
-                     gotoHome={gotoHome}
-                     gotoReport={gotoReport}
-                     theme={theme}
-                  />
-               </View>
-            </View>
+            ))}
          </SwiperFlatList>
-
          <View style={{ alignItems: "center" }}>
-            <View style={[styles.pageChildInside, { height: 50 }]}>
+            <View style={[stylesFunc(layout).pageChildInside, { height: 50 }]}>
                {position !== 2 && (
                   <NaviButtons
                      position={position}
@@ -110,20 +105,24 @@ function Report({
    );
 }
 
+const stylesFunc = ({ window: { width, height }, isSmallDevice }: LayoutType) =>
+   StyleSheet.create({
+      pagerChildCaontainer: {
+         width: width,
+         height: height - NAV_HEADER_HEIGHT,
+         alignItems: "center",
+         justifyContent: "center",
+      },
+      pageChildInside: {
+         width: isSmallDevice ? width : WEB_REPORT_CONTENT_WIDTH,
+         height: "100%",
+         overflow: "hidden",
+      },
+   });
+
 const styles = StyleSheet.create({
    container: {
       flex: 1,
-   },
-   pagerChildCaontainer: {
-      width: Layout.window.width,
-      height: Layout.window.height - NAV_HEADER_HEIGHT,
-      alignItems: "center",
-      justifyContent: "center",
-   },
-   pageChildInside: {
-      width: WEB_REPORT_CONTENT_WIDTH,
-      height: "100%",
-      overflow: "hidden",
    },
    inputContainer: {
       flex: 1,

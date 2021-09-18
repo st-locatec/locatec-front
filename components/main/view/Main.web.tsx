@@ -7,7 +7,6 @@ import MapView, {
    Region,
 } from "react-native-maps";
 import { Text, View } from "../../Themed";
-import Layout from "../../../constants/Layout";
 import { Image } from "react-native-elements";
 import { FLOATING_BUTTON_WIDTH } from "../../../constants/Size";
 import { CustomSpeedDial, FloatingButton } from "../elements/CustomButtons";

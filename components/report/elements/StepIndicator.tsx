@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 
 import DefaultStepIndicator from "react-native-step-indicator";
+import useLayout from "../../../hooks/useLayout";
 import { WEB_REPORT_CONTENT_WIDTH } from "../../../constants/Size";
 import { report_stepIndicator } from "../../../constants/Strings";
 import { isWeb } from "../../../constants/Variables";
@@ -32,10 +33,15 @@ const customStyles = {
 };
 
 function StepIndicator({ position }: Props) {
+   const layout = useLayout();
    return (
       <View
          style={{
-            width: isWeb ? WEB_REPORT_CONTENT_WIDTH : "100%",
+            width: isWeb
+               ? layout.isSmallDevice
+                  ? layout.window.width
+                  : WEB_REPORT_CONTENT_WIDTH
+               : "100%",
             height: 70,
             marginTop: 20,
             marginBottom: 0,

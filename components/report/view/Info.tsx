@@ -1,10 +1,9 @@
-import { ImagePickerResult } from "expo-image-picker";
 import React from "react";
 import { StyleSheet } from "react-native";
 import { Image } from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
 import Colors from "../../../constants/Colors";
-import Layout from "../../../constants/Layout";
+import useLayout from "../../../hooks/useLayout";
 import {
    MENU_ITEM_HEIGHT,
    WEB_REPORT_CONTENT_WIDTH,
@@ -14,10 +13,6 @@ import { ImageLibraryReturn, LocationType } from "../../../types";
 
 import { Button, ListItem, Text, View } from "../../Themed";
 import Menu from "../elements/Menu";
-
-const width = isWeb ? WEB_REPORT_CONTENT_WIDTH : Layout.window.width;
-const IMAGE_WIDTH: number = width * 0.8;
-const IMAGE_HEIGHT: number = ((width * 0.8) / 4) * 3;
 
 type Props = {
    locationType: LocationType;
@@ -38,6 +33,15 @@ function Info({
    addPhoto,
    settingAddPhoto,
 }: Props) {
+   const layout = useLayout();
+
+   const width =
+      isWeb && !layout.isSmallDevice
+         ? WEB_REPORT_CONTENT_WIDTH
+         : layout.window.width;
+   const IMAGE_WIDTH: number = width * 0.8;
+   const IMAGE_HEIGHT: number = ((width * 0.8) / 4) * 3;
+
    const onPressAddPhoto = () => {
       settingAddPhoto(true);
       selectPhoto(addPhoto);
@@ -81,7 +85,7 @@ function Info({
                />
             </View>
          </ListItem>
-         <View style={styles.imageContainer}>
+         <View style={[styles.imageContainer, { height: IMAGE_HEIGHT }]}>
             {addPhoto && !photo?.cancelled && photo?.uri && (
                <Image
                   source={{ uri: photo.uri }}
@@ -124,7 +128,6 @@ const styles = StyleSheet.create({
    },
    imageContainer: {
       width: "100%",
-      height: IMAGE_HEIGHT,
       marginTop: 10,
       justifyContent: "center",
       alignItems: "center",

@@ -7,7 +7,6 @@ import MapView, {
    Region,
 } from "react-native-maps";
 import { Text, View } from "../../Themed";
-import Layout from "../../../constants/Layout";
 import { Image } from "react-native-elements";
 import { FLOATING_BUTTON_WIDTH } from "../../../constants/Size";
 import { CustomSpeedDial, FloatingButton } from "../elements/CustomButtons";
@@ -21,6 +20,7 @@ import {
 } from "../../../types";
 import { smokingPlace, trashcan } from "../../../constants/Strings";
 import WebView from "react-native-webview";
+import useLayout from "../../../hooks/useLayout";
 
 type Props = {
    isInsie: boolean;
@@ -52,6 +52,7 @@ function Main({
    animateToClosest,
 }: Props) {
    const [markerImages, setMarkerImages] = useState();
+   const layout = useLayout();
 
    useEffect(() => {
       let obj: any = {};
@@ -75,7 +76,7 @@ function Main({
                region={region}
                showsUserLocation={isInsie ? false : true}
                key="Gmap"
-               style={styles.map}
+               style={[styles.map, { width: layout.window.width }]}
                onRegionChangeComplete={onAnimateRegion}>
                {markerImages && isInsie && (
                   <Marker key={`marker`} coordinate={myLocation}>
@@ -178,7 +179,6 @@ const styles = StyleSheet.create({
       justifyContent: "center",
    },
    map: {
-      width: Layout.window.width,
       height: "100%",
       zIndex: 1,
    },
