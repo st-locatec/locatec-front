@@ -16,7 +16,6 @@ import {
 import getMyLocation from "../../../utils/getMyLocation";
 import Report from "../view/Report";
 import * as ImagePicker from "expo-image-picker";
-import { Alert } from "react-native";
 import {
    changePhotoContent,
    changePhotoTitle,
@@ -24,6 +23,7 @@ import {
    YES,
 } from "../../../constants/Strings";
 import { RootState } from "../../../modules";
+import Alert from "../../elements/Alert";
 
 type Props = {};
 
@@ -129,20 +129,16 @@ function ReportContainer({
       if (!photo) {
          await pickPhoto();
       } else if (v) {
-         Alert.alert(changePhotoTitle, changePhotoContent, [
-            {
-               text: NO,
-               onPress: () => {},
-            },
-            {
-               text: YES,
-               onPress: () => {
-                  setPrevPhoto(photo);
-                  setPhoto(null);
-                  pickPhoto();
-               },
-            },
-         ]);
+         Alert(
+            changePhotoTitle,
+            changePhotoContent,
+            () => {},
+            () => {
+               setPrevPhoto(photo);
+               setPhoto(null);
+               pickPhoto();
+            }
+         );
       }
    };
 
@@ -167,7 +163,6 @@ function ReportContainer({
       setPhoto(null);
    };
    const onPressMap = (coordinate: CoordType) => {
-      console.log(coordinate);
       mapViewRef.current?.animateToRegion({ ...coordinate, ...deltas }, 500);
    };
 

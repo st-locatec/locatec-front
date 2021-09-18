@@ -1,18 +1,17 @@
 import React from "react";
 import { StyleSheet } from "react-native";
-import { Image } from "react-native-elements";
-import MapView, { PROVIDER_GOOGLE, Region } from "react-native-maps";
-import useLayout, { LayoutType } from "../../../hooks/useLayout";
-import { MARKER_SIZE, WEB_REPORT_CONTENT_WIDTH } from "../../../constants/Size";
+import MapView, { Region } from "react-native-maps";
+import { MARKER_SIZE } from "../../../constants/Size";
 import { Text, View } from "../../Themed";
+import { CoordType } from "../../../types";
 
 type Props = {
    region: Region;
    mapViewRef: React.RefObject<MapView>;
+   onPressMap: (v: CoordType) => void;
 };
 
-function Map({ region, mapViewRef }: Props) {
-   const layout = useLayout();
+function Map({ region, mapViewRef, onPressMap }: Props) {
    return (
       <View style={styles.container}>
          <View style={styles.labelContainer}>
@@ -20,33 +19,25 @@ function Map({ region, mapViewRef }: Props) {
          </View>
          <MapView
             ref={mapViewRef}
-            provider={PROVIDER_GOOGLE}
             region={region}
             key="Gmap"
             style={styles.map}
             defaultZoom={18}
-            options={{ disableDefaultUI: true, zoom: 18 }}></MapView>
-         <View style={[styles.markerWrap, stylesFunc(layout).markerWrapOffset]}>
-            <Image
-               source={require("../../../assets/images/map_marker_web.png")}
-               style={[styles.marker]}
-               resizeMode="cover"
+            options={{ disableDefaultUI: true, zoom: 18 }}
+            onPress={(v) => {
+               onPressMap({
+                  latitude: v.latLng.lat(),
+                  longitude: v.latLng.lng(),
+               });
+            }}>
+            <MapView.Marker
+               coordinate={region}
+               icon={require("../../../assets/images/map_marker_web.png")}
             />
-         </View>
+         </MapView>
       </View>
    );
 }
-const stylesFunc = (layout: LayoutType) =>
-   StyleSheet.create({
-      markerWrapOffset: {
-         position: "absolute",
-         left:
-            (layout.isSmallDevice
-               ? layout.window.width
-               : WEB_REPORT_CONTENT_WIDTH) * 0.5,
-         bottom: "50%",
-      },
-   });
 
 const styles = StyleSheet.create({
    container: {
@@ -66,7 +57,7 @@ const styles = StyleSheet.create({
    },
    map: {
       width: "100%",
-      height: "100%",
+      height: "70%",
       zIndex: 1,
    },
    markerWrap: {

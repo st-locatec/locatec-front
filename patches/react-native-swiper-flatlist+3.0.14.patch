@@ -1,0 +1,22 @@
+diff --git a/node_modules/react-native-swiper-flatlist/src/components/SwiperFlatList/SwiperFlatList.tsx b/node_modules/react-native-swiper-flatlist/src/components/SwiperFlatList/SwiperFlatList.tsx
+index 564a106..b47d903 100644
+--- a/node_modules/react-native-swiper-flatlist/src/components/SwiperFlatList/SwiperFlatList.tsx
++++ b/node_modules/react-native-swiper-flatlist/src/components/SwiperFlatList/SwiperFlatList.tsx
+@@ -10,7 +10,7 @@ const ITEM_VISIBLE_PERCENT_THRESHOLD = 60;
+ 
+ // TODO: figure out how to use forwardRef with generics
+ type T1 = any;
+-type ScrollToIndex = { index: number; animated?: boolean };
++type ScrollToIndex = { index: number; animated?: boolean; viewOffset?:number; };
+ type ScrollToIndexInternal = { useOnChangeIndex: boolean };
+ 
+ const { width: WIDTH, height: HEIGHT } = Dimensions.get('window');
+@@ -85,7 +85,7 @@ export const SwiperFlatList = React.forwardRef(
+ 
+     const _scrollToIndex = (params: ScrollToIndex, extra: ScrollToIndexInternal) => {
+       const { index: indexToScroll, animated = true } = params;
+-      const newParams = { animated, index: indexToScroll };
++      const newParams = { animated, index: indexToScroll, viewOffset:params.viewOffset };
+ 
+       setIgnoreOnMomentumScrollEnd(true);
+ 

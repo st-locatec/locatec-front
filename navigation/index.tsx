@@ -10,7 +10,6 @@ import ReportScreen from "../screens/ReportScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import MainScreen from "../screens/MainScreen";
 import { DARK, RootStackParamList, ThemeScheme } from "../types";
-import LinkingConfiguration from "./LinkingConfiguration";
 import { appName } from "../constants/Strings";
 import Switch from "../components/elements/Switch";
 
@@ -21,7 +20,6 @@ export default function Navigation({
 }) {
    return (
       <NavigationContainer
-         linking={LinkingConfiguration}
          theme={colorScheme === DARK ? DarkTheme : DefaultTheme}>
          <RootNavigator />
       </NavigationContainer>

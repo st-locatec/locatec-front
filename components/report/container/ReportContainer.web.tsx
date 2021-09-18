@@ -5,6 +5,7 @@ import { INSIDE_SHCOOL } from "../../../constants/Size";
 import { centerSchool, deltas } from "../../../constants/Variables";
 import { loading, unloading } from "../../../modules/loading";
 import {
+   CoordType,
    ImageLibraryReturn,
    LocationType,
    RootStackScreenProps,
@@ -13,7 +14,6 @@ import {
 import getMyLocation from "../../../utils/getMyLocation";
 import Report from "../view/Report.web";
 import * as ImagePicker from "expo-image-picker";
-import { Alert } from "react-native";
 import {
    changePhotoContent,
    changePhotoTitle,
@@ -22,6 +22,8 @@ import {
 } from "../../../constants/Strings";
 import { RootState } from "../../../modules";
 import SwiperFlatList from "react-native-swiper-flatlist";
+import useLayout from "../../../hooks/useLayout";
+import Alert from "../../elements/Alert.web";
 
 type Props = {};
 
@@ -37,8 +39,23 @@ function ReportContainer({
    const [prevPhoto, setPrevPhoto] = useState<ImageLibraryReturn>(null);
    const [photo, setPhoto] = useState<ImageLibraryReturn>(null);
    const [addPhoto, setAddPhoto] = useState(false);
+   const [firstWidth, setFirstWidth] = useState(0);
+
    const theme = useSelector(({ theme }: RootState) => theme);
    const dispatch = useDispatch();
+   const layout = useLayout();
+
+   useEffect(() => {
+      if (firstWidth) {
+         if (
+            layout.window.width >= firstWidth * 2 ||
+            (firstWidth / 3) * 2 >= layout.window.width
+         ) {
+         }
+      } else {
+         setFirstWidth(layout.window.width);
+      }
+   }, [layout, firstWidth]);
 
    useEffect(() => {
       const mainInit = async () => {
@@ -66,24 +83,22 @@ function ReportContainer({
       };
       mainInit();
    }, [refresh]);
+
    const goNext = useCallback((): void => {
       pagerRef.current?.scrollToIndex({
          index: position + 1,
          animated: true,
       });
       setPosition(position + 1);
-   }, [pagerRef, position]);
+   }, [pagerRef, position, layout]);
    const goPrev = useCallback((): void => {
       pagerRef.current?.scrollToIndex({
          index: position - 1,
          animated: true,
       });
       setPosition(position - 1);
-   }, [pagerRef, position]);
-
-   const onAnimateRegion = (reg: Region) => {
-      setRegion(reg);
-   };
+   }, [pagerRef, position, layout]);
+   console.log(position);
 
    const settingLocationType = (v: LocationType) => {
       setLocationType(v);
@@ -120,20 +135,16 @@ function ReportContainer({
       if (!photo) {
          await pickPhoto();
       } else if (v) {
-         Alert.alert(changePhotoTitle, changePhotoContent, [
-            {
-               text: NO,
-               onPress: () => {},
-            },
-            {
-               text: YES,
-               onPress: () => {
-                  setPrevPhoto(photo);
-                  setPhoto(null);
-                  pickPhoto();
-               },
-            },
-         ]);
+         Alert(
+            changePhotoTitle,
+            changePhotoContent,
+            () => {},
+            () => {
+               pickPhoto();
+               setPrevPhoto(photo);
+               setPhoto(null);
+            }
+         );
       }
    };
 
@@ -152,12 +163,16 @@ function ReportContainer({
       pagerRef.current?.goToFirstIndex();
       navigation.navigate("Main");
    };
+
    const gotoReport = () => {
       setRefresh((prev) => prev + 1);
       pagerRef.current?.goToFirstIndex();
       setPosition(0);
       setLocationType(SMOKE);
       setPhoto(null);
+   };
+   const onPressMap = (coordinate: CoordType) => {
+      setRegion({ ...coordinate, ...deltas });
    };
 
    return (
@@ -168,7 +183,6 @@ function ReportContainer({
          goNext={goNext}
          goPrev={goPrev}
          position={position}
-         onAnimateRegion={onAnimateRegion}
          locationType={locationType}
          settingLocationType={settingLocationType}
          selectPhoto={selectPhoto}
@@ -179,6 +193,7 @@ function ReportContainer({
          addPhoto={addPhoto}
          settingAddPhoto={settingAddPhoto}
          theme={theme}
+         onPressMap={onPressMap}
       />
    );
 }

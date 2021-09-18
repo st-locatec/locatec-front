@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import MapView, { Region } from "react-native-maps";
 import {
-   AnimateRegionType,
+   CoordType,
    ImageLibraryReturn,
    LocationType,
    ThemeScheme,
@@ -28,7 +28,6 @@ type Props = {
    goNext: () => void;
    goPrev: () => void;
    position: number;
-   onAnimateRegion?: AnimateRegionType;
    locationType: LocationType;
    settingLocationType: (v: LocationType) => void;
    selectPhoto: (v: boolean) => Promise<void>;
@@ -39,6 +38,7 @@ type Props = {
    addPhoto: boolean;
    settingAddPhoto: (v: boolean) => void;
    theme: ThemeScheme;
+   onPressMap: (v: CoordType) => void;
 };
 
 function Report({
@@ -58,11 +58,12 @@ function Report({
    addPhoto,
    settingAddPhoto,
    theme,
+   onPressMap,
 }: Props) {
    const layout = useLayout();
 
    const contentArray = [
-      <Map region={region} mapViewRef={mapViewRef} />,
+      <Map region={region} mapViewRef={mapViewRef} onPressMap={onPressMap} />,
       <Info
          locationType={locationType}
          settingLocationType={settingLocationType}
