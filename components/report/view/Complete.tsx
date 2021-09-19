@@ -5,7 +5,7 @@ import { Button, Text, View } from "../../Themed";
 import Colors from "../../../constants/Colors";
 import { LIGHT, ThemeScheme } from "../../../types";
 
-const thanksAnimation_light = require("../../../assets/animations/thanksAnimtaion.json");
+const completion_animation = require("../../../assets/animations/completion.json");
 const thanksAnimation_dark = require("../../../assets/animations/lf30_editor_pfhhzoyg.json");
 
 type Props = {
@@ -19,11 +19,19 @@ function Complete({ gotoHome, gotoReport, theme }: Props) {
       <View style={styles.container}>
          <View style={styles.lottieContainer}>
             <LottieView
-               source={thanksAnimation_light}
+               source={completion_animation}
                autoPlay={true}
                loop={true}
-               speed={1.5}
+               style={{ width: 300, height: 225 }}
             />
+            <View style={styles.textContainer}>
+               <Text style={{ fontSize: 20, marginBottom: 20 }}>
+                  이용해주셔서 감사합니다.
+               </Text>
+               <Text style={{ fontSize: 20 }}>
+                  해당 요청은 관리자 검토 후 반영됩니다.
+               </Text>
+            </View>
          </View>
          <View style={styles.goBackContainer}>
             <Button
@@ -49,8 +57,14 @@ const styles = StyleSheet.create({
    },
    lottieContainer: {
       width: "100%",
-      height: "70%",
+      height: "80%",
+      justifyContent: "center",
+      alignItems: "center",
       right: 10,
+   },
+   textContainer: {
+      width: "100%",
+      alignItems: "center",
    },
    goBackContainer: {
       flexDirection: "row",

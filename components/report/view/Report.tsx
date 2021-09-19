@@ -1,9 +1,7 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 import MapView, { Region } from "react-native-maps";
-import PagerView, {
-   PagerViewOnPageSelectedEvent,
-} from "react-native-pager-view";
+import useLayout from "../../../hooks/useLayout";
 import {
    AnimateRegionType,
    CoordType,
@@ -12,7 +10,7 @@ import {
    ThemeScheme,
 } from "../../../types";
 
-import { Text, View } from "../../Themed";
+import { View } from "../../Themed";
 import NaviButtons from "../elements/naviButtons";
 import StepIndicator from "../elements/StepIndicator";
 import Complete from "./Complete";
@@ -22,11 +20,10 @@ import Map from "./Map";
 type Props = {
    region: Region;
    mapViewRef: React.RefObject<MapView>;
-   pagerRef: React.RefObject<PagerView>;
+   pagerRef: React.RefObject<FlatList>;
    goNext: () => void;
    goPrev: () => void;
    position: number;
-   onPageScroll: (e: PagerViewOnPageSelectedEvent) => void;
    onAnimateRegion: AnimateRegionType;
    locationType: LocationType;
    settingLocationType: (v: LocationType) => void;
@@ -48,7 +45,6 @@ function Report({
    goNext,
    goPrev,
    position,
-   onPageScroll,
    locationType,
    settingLocationType,
    selectPhoto,
@@ -62,44 +58,47 @@ function Report({
    theme,
    onPressMap,
 }: Props) {
+   const layout = useLayout();
+   const contentArray = [
+      <Map
+         region={region}
+         mapViewRef={mapViewRef}
+         onAnimateRegion={onAnimateRegion}
+         onPressMap={onPressMap}
+      />,
+      <Info
+         locationType={locationType}
+         settingLocationType={settingLocationType}
+         selectPhoto={selectPhoto}
+         photo={photo}
+         sendRequest={sendRequest}
+         addPhoto={addPhoto}
+         settingAddPhoto={settingAddPhoto}
+      />,
+      <Complete gotoHome={gotoHome} gotoReport={gotoReport} theme={theme} />,
+   ];
    return (
       <View style={styles.container}>
          <StepIndicator position={position} />
-         <PagerView
+         <FlatList
             ref={pagerRef}
-            style={{ flex: 1 }}
-            initialPage={0}
-            scrollEnabled={false}
-            onPageSelected={onPageScroll}>
-            <View key="1" style={{ flex: 1 }}>
-               <Map
-                  region={region}
-                  mapViewRef={mapViewRef}
-                  onAnimateRegion={onAnimateRegion}
-                  onPressMap={onPressMap}
-               />
-            </View>
-
-            <View key="2" style={{ flex: 1 }}>
-               <Info
-                  locationType={locationType}
-                  settingLocationType={settingLocationType}
-                  selectPhoto={selectPhoto}
-                  photo={photo}
-                  sendRequest={sendRequest}
-                  addPhoto={addPhoto}
-                  settingAddPhoto={settingAddPhoto}
-               />
-            </View>
-            <View key="3" style={{ flex: 1 }}>
-               <Complete
-                  gotoHome={gotoHome}
-                  gotoReport={gotoReport}
-                  theme={theme}
-               />
-            </View>
-         </PagerView>
-
+            initialScrollIndex={0}
+            horizontal={true}
+            data={contentArray}
+            keyExtractor={(item, index) => `flaylist_content_${index}`}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({ item, index }) => (
+               <View
+                  key={`flaylist_content_${index}`}
+                  style={[
+                     {
+                        width: layout.window.width,
+                        height: "100%",
+                     },
+                  ]}>
+                  {item}
+               </View>
+            )}></FlatList>
          <View style={{ height: 50 }}>
             {position !== 2 && (
                <NaviButtons

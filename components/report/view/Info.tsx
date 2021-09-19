@@ -89,7 +89,7 @@ function Info({
             {addPhoto && !photo?.cancelled && photo?.uri && (
                <Image
                   source={{ uri: photo.uri }}
-                  style={{
+                  containerStyle={{
                      width: IMAGE_WIDTH,
                      height: IMAGE_HEIGHT,
                      borderRadius: 40,

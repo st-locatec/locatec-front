@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 import MapView, { Region } from "react-native-maps";
 import {
    CoordType,
@@ -14,17 +14,13 @@ import StepIndicator from "../elements/StepIndicator";
 import Complete from "./Complete";
 import Info from "./Info";
 import Map from "./Map.web";
-import { SwiperFlatList } from "react-native-swiper-flatlist";
-import {
-   NAV_HEADER_HEIGHT,
-   WEB_REPORT_CONTENT_WIDTH,
-} from "../../../constants/Size";
+import { WEB_REPORT_CONTENT_WIDTH } from "../../../constants/Size";
 import useLayout, { LayoutType } from "../../../hooks/useLayout";
 
 type Props = {
    region: Region;
    mapViewRef: React.RefObject<MapView>;
-   pagerRef: React.RefObject<SwiperFlatList>;
+   pagerRef: React.RefObject<FlatList>;
    goNext: () => void;
    goPrev: () => void;
    position: number;
@@ -81,15 +77,19 @@ function Report({
          <View style={{ alignItems: "center" }}>
             <StepIndicator position={position} />
          </View>
-         <SwiperFlatList ref={pagerRef} index={0} disableGesture={true}>
-            {contentArray.map((item, idx) => (
+         <FlatList
+            ref={pagerRef}
+            initialScrollIndex={0}
+            horizontal={true}
+            data={contentArray}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({ item, index }) => (
                <View
-                  key={`flaylist_content_${idx}`}
+                  key={`flaylist_content_${index}`}
                   style={[stylesFunc(layout).pagerChildCaontainer]}>
                   <View style={stylesFunc(layout).pageChildInside}>{item}</View>
                </View>
-            ))}
-         </SwiperFlatList>
+            )}></FlatList>
          <View style={{ alignItems: "center" }}>
             <View style={[stylesFunc(layout).pageChildInside, { height: 50 }]}>
                {position !== 2 && (
@@ -110,7 +110,7 @@ const stylesFunc = ({ window: { width, height }, isSmallDevice }: LayoutType) =>
    StyleSheet.create({
       pagerChildCaontainer: {
          width: width,
-         height: height - NAV_HEADER_HEIGHT,
+         height: "100%",
          alignItems: "center",
          justifyContent: "center",
       },

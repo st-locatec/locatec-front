@@ -17,13 +17,11 @@ import * as ImagePicker from "expo-image-picker";
 import {
    changePhotoContent,
    changePhotoTitle,
-   NO,
-   YES,
 } from "../../../constants/Strings";
 import { RootState } from "../../../modules";
-import SwiperFlatList from "react-native-swiper-flatlist";
 import useLayout from "../../../hooks/useLayout";
 import Alert from "../../elements/Alert.web";
+import { FlatList } from "react-native";
 
 type Props = {};
 
@@ -35,7 +33,7 @@ function ReportContainer({
    const [position, setPosition] = useState<number>(0);
    const [locationType, setLocationType] = useState<LocationType>(SMOKE);
    const mapViewRef = useRef<MapView>() as React.RefObject<MapView>;
-   const pagerRef = useRef<SwiperFlatList>() as React.RefObject<SwiperFlatList>;
+   const pagerRef = useRef<FlatList>() as React.RefObject<FlatList>;
    const [prevPhoto, setPrevPhoto] = useState<ImageLibraryReturn>(null);
    const [photo, setPhoto] = useState<ImageLibraryReturn>(null);
    const [addPhoto, setAddPhoto] = useState(false);
@@ -84,21 +82,21 @@ function ReportContainer({
       mainInit();
    }, [refresh]);
 
-   const goNext = useCallback((): void => {
+   const scrollToIndex = (to: number) => {
       pagerRef.current?.scrollToIndex({
-         index: position + 1,
+         index: to,
          animated: true,
+         viewPosition: 0,
       });
-      setPosition(position + 1);
+      setPosition(to);
+   };
+
+   const goNext = useCallback((): void => {
+      scrollToIndex(position + 1);
    }, [pagerRef, position, layout]);
    const goPrev = useCallback((): void => {
-      pagerRef.current?.scrollToIndex({
-         index: position - 1,
-         animated: true,
-      });
-      setPosition(position - 1);
+      scrollToIndex(position - 1);
    }, [pagerRef, position, layout]);
-   console.log(position);
 
    const settingLocationType = (v: LocationType) => {
       setLocationType(v);
@@ -159,15 +157,13 @@ function ReportContainer({
       dispatch(unloading());
    };
    const gotoHome = () => {
-      setPosition(0);
-      pagerRef.current?.goToFirstIndex();
+      scrollToIndex(0);
       navigation.navigate("Main");
    };
 
    const gotoReport = () => {
       setRefresh((prev) => prev + 1);
-      pagerRef.current?.goToFirstIndex();
-      setPosition(0);
+      scrollToIndex(0);
       setLocationType(SMOKE);
       setPhoto(null);
    };

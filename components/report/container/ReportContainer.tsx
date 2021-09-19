@@ -1,11 +1,8 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import MapView, { Region } from "react-native-maps";
-import PagerView, {
-   PagerViewOnPageSelectedEvent,
-} from "react-native-pager-view";
 import { useDispatch, useSelector } from "react-redux";
 import { INSIDE_SHCOOL } from "../../../constants/Size";
-import { centerSchool, deltas, isWeb } from "../../../constants/Variables";
+import { centerSchool, deltas } from "../../../constants/Variables";
 import { loading, unloading } from "../../../modules/loading";
 import {
    CoordType,
@@ -19,11 +16,10 @@ import * as ImagePicker from "expo-image-picker";
 import {
    changePhotoContent,
    changePhotoTitle,
-   NO,
-   YES,
 } from "../../../constants/Strings";
 import { RootState } from "../../../modules";
 import Alert from "../../elements/Alert";
+import { FlatList } from "react-native";
 
 type Props = {};
 
@@ -35,7 +31,7 @@ function ReportContainer({
    const [position, setPosition] = useState<number>(0);
    const [locationType, setLocationType] = useState<LocationType>(SMOKE);
    const mapViewRef = useRef<MapView>() as React.RefObject<MapView>;
-   const pagerRef = useRef<PagerView>() as React.RefObject<PagerView>;
+   const pagerRef = useRef<FlatList>() as React.RefObject<FlatList>;
    const [prevPhoto, setPrevPhoto] =
       useState<ImagePicker.ImagePickerResult | null>(null);
    const [photo, setPhoto] = useState<ImagePicker.ImagePickerResult | null>(
@@ -72,16 +68,21 @@ function ReportContainer({
       mainInit();
    }, [refresh]);
 
+   const scrollToIndex = (to: number) => {
+      pagerRef.current?.scrollToIndex({
+         index: to,
+         animated: true,
+         viewPosition: 0,
+      });
+      setPosition(to);
+   };
+
    const goNext = useCallback((): void => {
-      pagerRef.current?.setPage(position + 1);
+      scrollToIndex(position + 1);
    }, [pagerRef, position]);
    const goPrev = useCallback((): void => {
-      pagerRef.current?.setPage(position - 1);
+      scrollToIndex(position - 1);
    }, [pagerRef, position]);
-
-   const onPageScroll = useCallback((e: PagerViewOnPageSelectedEvent): void => {
-      setPosition(e.nativeEvent.position);
-   }, []);
 
    const settingLocationType = (v: LocationType) => {
       setLocationType(v);
@@ -157,8 +158,7 @@ function ReportContainer({
    };
    const gotoReport = () => {
       setRefresh((prev) => prev + 1);
-      pagerRef.current?.setPage(0);
-      setPosition(0);
+      scrollToIndex(0);
       setLocationType(SMOKE);
       setPhoto(null);
    };
@@ -174,7 +174,6 @@ function ReportContainer({
          goNext={goNext}
          goPrev={goPrev}
          position={position}
-         onPageScroll={onPageScroll}
          locationType={locationType}
          settingLocationType={settingLocationType}
          selectPhoto={selectPhoto}
