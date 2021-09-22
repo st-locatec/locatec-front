@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import MapView, { Region } from "react-native-maps";
 import Main from "../view/Main";
 import {
+   CoordType,
    LocationType,
    MarkerType,
    RootStackScreenProps,
@@ -12,6 +13,7 @@ import { INSIDE_SHCOOL } from "../../../constants/Size";
 import { locate } from "../tempData";
 import { centerSchool, deltas } from "../../../constants/Variables";
 import getMyLocation from "../../../utils/getMyLocation";
+import isTwoRegionSame from "../../../utils/isTwoRegionSame";
 
 type Props = {};
 
@@ -65,10 +67,13 @@ function MainContainer({ navigation }: Props & RootStackScreenProps<"Main">) {
            }
          | undefined
    ) => {
-      if (!details?.isGesture) {
-         setRegion(reg);
+      if (!details?.isGesture || !details) {
+         if (!isTwoRegionSame(reg, region)) {
+            setRegion(reg);
+         }
       }
    };
+
    const toggleIsOpen = () => {
       setIsOpen((prev) => !prev);
    };
@@ -108,6 +113,16 @@ function MainContainer({ navigation }: Props & RootStackScreenProps<"Main">) {
       }
    };
 
+   const onPressMarker_Web = (coord: CoordType) => {
+      mapViewRef.current?.animateToRegion(
+         {
+            ...coord,
+            ...deltas,
+         },
+         1000
+      );
+   };
+
    return (
       <Main
          myLocation={myLocation}
@@ -122,6 +137,7 @@ function MainContainer({ navigation }: Props & RootStackScreenProps<"Main">) {
          locationType={locationType}
          changeLocationType={changeLocationType}
          animateToClosest={animateToClosest}
+         onPressMarker_Web={onPressMarker_Web}
       />
    );
 }

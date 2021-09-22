@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import MapView, { Region } from "react-native-maps";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { INSIDE_SHCOOL } from "../../../constants/Size";
 import { centerSchool, deltas } from "../../../constants/Variables";
 import { loading, unloading } from "../../../modules/loading";
@@ -17,7 +17,6 @@ import {
    changePhotoContent,
    changePhotoTitle,
 } from "../../../constants/Strings";
-import { RootState } from "../../../modules";
 import Alert from "../../elements/Alert";
 import { FlatList } from "react-native";
 
@@ -38,7 +37,6 @@ function ReportContainer({
       null
    );
    const [addPhoto, setAddPhoto] = useState(false);
-   const theme = useSelector(({ theme }: RootState) => theme);
    const dispatch = useDispatch();
 
    useEffect(() => {
@@ -184,7 +182,6 @@ function ReportContainer({
          addPhoto={addPhoto}
          onAnimateRegion={onAnimateRegion}
          settingAddPhoto={settingAddPhoto}
-         theme={theme}
          onPressMap={onPressMap}
       />
    );

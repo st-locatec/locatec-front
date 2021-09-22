@@ -11,3 +11,8 @@ export const changePhotoContent: string = "사진을 변경하시겠습니까?";
 
 export const YES: string = "예";
 export const NO: string = "아니요";
+
+export const thankyou_for_using: string = "이용해주셔서 감사합니다.";
+
+export const apply_after_inspect: string =
+   "해당 요청은 관리자 검토 후 반영됩니다.";

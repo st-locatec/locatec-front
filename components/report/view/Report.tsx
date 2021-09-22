@@ -34,7 +34,6 @@ type Props = {
    gotoReport: () => void;
    addPhoto: boolean;
    settingAddPhoto: (v: boolean) => void;
-   theme: ThemeScheme;
    onPressMap: (coord: CoordType) => void;
 };
 
@@ -55,7 +54,6 @@ function Report({
    addPhoto,
    onAnimateRegion,
    settingAddPhoto,
-   theme,
    onPressMap,
 }: Props) {
    const layout = useLayout();
@@ -75,7 +73,7 @@ function Report({
          addPhoto={addPhoto}
          settingAddPhoto={settingAddPhoto}
       />,
-      <Complete gotoHome={gotoHome} gotoReport={gotoReport} theme={theme} />,
+      <Complete gotoHome={gotoHome} gotoReport={gotoReport} />,
    ];
    return (
       <View style={styles.container}>
@@ -85,6 +83,7 @@ function Report({
             initialScrollIndex={0}
             horizontal={true}
             data={contentArray}
+            scrollEnabled={false}
             keyExtractor={(item, index) => `flaylist_content_${index}`}
             showsHorizontalScrollIndicator={false}
             renderItem={({ item, index }) => (

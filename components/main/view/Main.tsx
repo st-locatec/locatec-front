@@ -1,41 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet } from "react-native";
-import MapView, {
-   Callout,
-   Marker,
-   PROVIDER_GOOGLE,
-   Region,
-} from "react-native-maps";
-import { Text, View } from "../../Themed";
+import MapView, { Callout, Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { View } from "../../Themed";
 import { Image } from "react-native-elements";
 import { FLOATING_BUTTON_WIDTH } from "../../../constants/Size";
 import { CustomSpeedDial, FloatingButton } from "../elements/CustomButtons";
 import Colors from "../../../constants/Colors";
-import {
-   AnimateRegionType,
-   LocationType,
-   MarkerType,
-   SMOKE,
-   TRASHCAN,
-} from "../../../types";
+import { MarkerType, SMOKE, TRASHCAN } from "../../../types";
 import { smokingPlace, trashcan } from "../../../constants/Strings";
 import WebView from "react-native-webview";
 import useLayout from "../../../hooks/useLayout";
-
-type Props = {
-   isInsie: boolean;
-   myLocation: Region;
-   markers: MarkerType[] | undefined;
-   region: Region;
-   mapViewRef: React.RefObject<MapView>;
-   onAnimateRegion: AnimateRegionType;
-   isOpen: boolean;
-   locationType: LocationType;
-   toggleIsOpen: () => void;
-   goToReport: () => void;
-   changeLocationType: (v: LocationType) => void;
-   animateToClosest: () => void;
-};
+import { MainViewType } from "../types";
 
 function Main({
    myLocation,
@@ -50,7 +25,7 @@ function Main({
    goToReport,
    changeLocationType,
    animateToClosest,
-}: Props) {
+}: MainViewType) {
    const [markerImages, setMarkerImages] = useState();
    const layout = useLayout();
 
@@ -83,7 +58,7 @@ function Main({
                      <View style={[styles.markerWrap]}>
                         <Image
                            source={markerImages["user"]}
-                           style={[styles.marker]}
+                           containerStyle={[styles.marker]}
                            resizeMode="cover"
                         />
                      </View>
@@ -99,7 +74,7 @@ function Main({
                            <View style={[styles.markerWrap]}>
                               <Image
                                  source={markerImages[`${locationType}`]}
-                                 style={[styles.marker]}
+                                 containerStyle={[styles.marker]}
                                  resizeMode="cover"
                               />
                            </View>

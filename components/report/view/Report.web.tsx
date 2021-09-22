@@ -33,7 +33,6 @@ type Props = {
    gotoReport: () => void;
    addPhoto: boolean;
    settingAddPhoto: (v: boolean) => void;
-   theme: ThemeScheme;
    onPressMap: (v: CoordType) => void;
 };
 
@@ -53,7 +52,6 @@ function Report({
    gotoReport,
    addPhoto,
    settingAddPhoto,
-   theme,
    onPressMap,
 }: Props) {
    const layout = useLayout();
@@ -69,7 +67,7 @@ function Report({
          addPhoto={addPhoto}
          settingAddPhoto={settingAddPhoto}
       />,
-      <Complete gotoHome={gotoHome} gotoReport={gotoReport} theme={theme} />,
+      <Complete gotoHome={gotoHome} gotoReport={gotoReport} />,
    ];
 
    return (

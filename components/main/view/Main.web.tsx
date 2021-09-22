@@ -1,39 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet } from "react-native";
-import MapView, {
-   Callout,
-   Marker,
-   PROVIDER_GOOGLE,
-   Region,
-} from "react-native-maps";
-import { Text, View } from "../../Themed";
-import { Image } from "react-native-elements";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { View } from "../../Themed";
+import { Icon, Image } from "react-native-elements";
 import { FLOATING_BUTTON_WIDTH } from "../../../constants/Size";
 import { CustomSpeedDial, FloatingButton } from "../elements/CustomButtons";
 import Colors from "../../../constants/Colors";
-import {
-   AnimateRegionType,
-   LocationType,
-   MarkerType,
-   SMOKE,
-   TRASHCAN,
-} from "../../../types";
+import { MarkerType, SMOKE, TRASHCAN } from "../../../types";
 import { smokingPlace, trashcan } from "../../../constants/Strings";
-
-type Props = {
-   isInsie: boolean;
-   myLocation: Region;
-   markers: MarkerType[] | undefined;
-   region: Region;
-   mapViewRef: React.RefObject<MapView>;
-   onAnimateRegion: AnimateRegionType;
-   isOpen: boolean;
-   locationType: LocationType;
-   toggleIsOpen: () => void;
-   goToReport: () => void;
-   changeLocationType: (v: LocationType) => void;
-   animateToClosest: () => void;
-};
+import { MainViewType } from "../types";
+import { deltas } from "../../../constants/Variables";
+import isTwoRegionSame from "../../../utils/isTwoRegionSame";
 
 function Main({
    myLocation,
@@ -47,21 +24,33 @@ function Main({
    goToReport,
    changeLocationType,
    animateToClosest,
-}: Props) {
+   onAnimateRegion,
+   onPressMarker_Web,
+}: MainViewType) {
    const [markerImages, setMarkerImages] = useState();
 
    useEffect(() => {
       let obj: any = {};
-      obj["user"] = require(`../../../assets/images/map_marker_user_web.png`);
+      obj["user"] = require(`../../../assets/images/map_marker_user.png`);
       obj[
          `${SMOKE}`
-      ] = require(`../../../assets/images/map_marker_smoking_web.png`);
+      ] = require(`../../../assets/images/map_marker_smoking.png`);
       obj[
          `${TRASHCAN}`
-      ] = require(`../../../assets/images/map_marker_trash_web.png`);
+      ] = require(`../../../assets/images/map_marker_trash.png`);
 
       setMarkerImages(obj);
    }, []);
+
+   const makeGoogleIcon = (image: string, size: number[]): any => {
+      return new window.google.maps.MarkerImage(
+         image,
+         null /* size is determined at runtime */,
+         null /* origin is 0,0 */,
+         null /* anchor is bottom center of the scaled image */,
+         new window.google.maps.Size(...size)
+      );
+   };
 
    return (
       <View style={{ flex: 1 }}>
@@ -73,12 +62,27 @@ function Main({
                key="Gmap"
                style={styles.map}
                defaultZoom={18}
-               options={{ disableDefaultUI: true, zoom: 18 }}>
+               options={{ disableDefaultUI: true }}
+               onRegionChangeComplete={(v) => {
+                  onAnimateRegion({ ...v, ...deltas });
+               }}
+               onPress={() =>
+                  onAnimateRegion({
+                     ...region,
+                     latitude: region.latitude - 0.0000000000001,
+                  })
+               }>
                {markerImages && isInsie && (
-                  <MapView.Marker
+                  <Marker
                      key={`marker`}
                      coordinate={myLocation}
                      icon={markerImages["user"]}
+                     onPress={(v) =>
+                        onPressMarker_Web({
+                           latitude: v?.latLng?.lat(),
+                           longitude: v?.latLng?.lng(),
+                        })
+                     }
                   />
                )}
                {markerImages &&
@@ -90,23 +94,21 @@ function Main({
                         <Marker
                            key={`marker_${idx}`}
                            coordinate={item.coords}
-                           icon={markerImages[`${locationType}`]}
-                           style={{ width: 32 }}>
-                           <Callout>
-                              <View
-                                 style={[
-                                    styles.calloutSize,
-                                    styles.calloutContainer,
-                                    { position: "absolute" },
-                                 ]}>
-                                 <Image
-                                    source={{ uri: item.image }}
-                                    style={[styles.calloutSize]}
-                                    resizeMode="cover"
-                                 />
-                              </View>
-                           </Callout>
-                        </Marker>
+                           icon={
+                              isTwoRegionSame(region, item.coords) && item.image
+                                 ? makeGoogleIcon(item.image, [400, 300])
+                                 : makeGoogleIcon(
+                                      markerImages[`${locationType}`],
+                                      [48, 48]
+                                   )
+                           }
+                           onPress={(v) =>
+                              onPressMarker_Web({
+                                 latitude: v?.latLng?.lat(),
+                                 longitude: v?.latLng?.lng(),
+                              })
+                           }
+                        />
                      ))}
             </MapView>
             <View style={[styles.buttonCol, { left: 0 }]}>
