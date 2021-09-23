@@ -4,6 +4,7 @@ import MapView, { Region } from "react-native-maps";
 import { MARKER_SIZE } from "../../../constants/Size";
 import { Text, View } from "../../Themed";
 import { CoordType } from "../../../types";
+import makeGoogleIcon from "../../../utils/makeGoogleIcon";
 
 type Props = {
    region: Region;
@@ -32,7 +33,10 @@ function Map({ region, mapViewRef, onPressMap }: Props) {
             }}>
             <MapView.Marker
                coordinate={region}
-               icon={require("../../../assets/images/map_marker_web.png")}
+               icon={makeGoogleIcon(
+                  require("../../../assets/images/map_marker.png"),
+                  [48, 48]
+               )}
             />
          </MapView>
       </View>

@@ -8,7 +8,7 @@ import {
    MENU_ITEM_HEIGHT,
    WEB_REPORT_CONTENT_WIDTH,
 } from "../../../constants/Size";
-import { isWeb } from "../../../constants/Variables";
+import { isWeb } from "../../../constants/Constants";
 import { ImageLibraryReturn, LocationType } from "../../../types";
 
 import { Button, ListItem, Text, View } from "../../Themed";

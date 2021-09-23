@@ -1,6 +1,5 @@
 /**
- * Learn more about Light and Dark modes:
- * https://docs.expo.io/guides/color-schemes/
+ * 기초 스타일 element를 다크모드 또는 디자인 통일을 위해 한번 감싼 파일.
  */
 
 import * as React from "react";
@@ -19,42 +18,28 @@ import {
    MenuItemProps,
    MenuItem as DefaultMenuItem,
 } from "react-native-material-menu";
-import { useSelector } from "react-redux";
+import useThemeColor from "../hooks/useThemeColor";
 
-import Colors from "../constants/Colors";
-import { RootState } from "../modules";
-
-export function useThemeColor(
-   props: { light?: string; dark?: string },
-   colorName: keyof typeof Colors.light & keyof typeof Colors.dark
-) {
-   const theme = useSelector(({ theme }: RootState) => theme);
-   const colorFromProps = props[theme];
-
-   if (colorFromProps) {
-      return colorFromProps;
-   } else {
-      return Colors[theme][colorName];
-   }
-}
-
+// themed elements 의 Props 타입 선언
 type ThemeProps = {
    lightColor?: string;
    darkColor?: string;
 };
-
 export type TextProps = ThemeProps & DefaultText["props"];
 export type ViewProps = ThemeProps & DefaultView["props"];
 
 export type ThemedButtonProps = ThemeProps & ButtonProps & { color?: string };
 export type ThemedSpeedDialProps = ThemeProps &
    SpeedDialProps & { color?: string; actions?: ButtonProps[] };
-export type ThemedListItem = ThemeProps & ListItemProps;
-export type ThemedIcon = ThemeProps & IconProps;
-export type ThemedMenuItem = ThemeProps & MenuItemProps;
+export type ThemedListItemProps = ThemeProps & ListItemProps;
+export type ThemedIconProps = ThemeProps & IconProps;
+export type ThemedMenuItemProps = ThemeProps & MenuItemProps;
 
+// themed elements 정의
 export function Text(props: TextProps) {
+   // 이 함수에서 사용하는 props은 따로 빼주고, 나머지는 otherProps에 넣는다.
    const { style, lightColor, darkColor, ...otherProps } = props;
+   // useThemeColor hook을 활용한 전역 테마 색상 관리.
    const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
 
    return (
@@ -110,11 +95,11 @@ export function Button(props: ThemedButtonProps) {
             } else {
                return {
                   buttonStyle: [
-                     buttonStyle,
                      {
                         backgroundColor: color ? color : backgroundColor,
                         height: 50,
                      },
+                     buttonStyle,
                   ],
                };
             }
@@ -155,10 +140,10 @@ export function SpeedDial(props: ThemedSpeedDialProps) {
                {...item}
                key={idx}
                buttonStyle={[
-                  item.buttonStyle,
                   {
                      backgroundColor: color ? color : backgroundColor,
                   },
+                  item.buttonStyle,
                ]}
                containerStyle={item.containerStyle}
             />
@@ -167,7 +152,7 @@ export function SpeedDial(props: ThemedSpeedDialProps) {
    );
 }
 
-export function ListItem(props: ThemedListItem) {
+export function ListItem(props: ThemedListItemProps) {
    const { lightColor, darkColor, containerStyle, children, ...otherProps } =
       props;
 
@@ -185,14 +170,14 @@ export function ListItem(props: ThemedListItem) {
    );
 }
 
-export function Icon(props: ThemedIcon) {
+export function Icon(props: ThemedIconProps) {
    const { lightColor, darkColor, ...otherProps } = props;
-
    const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
+
    return <DefaultIcon color={color} {...otherProps} />;
 }
 
-export function MenuItem(props: ThemedMenuItem) {
+export function MenuItem(props: ThemedMenuItemProps) {
    const { lightColor, darkColor, children, ...otherProps } = props;
 
    const backgroundColor = useThemeColor(

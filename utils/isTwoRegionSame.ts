@@ -1,3 +1,7 @@
+/**
+ * 두 Region 또는 좌표가 같은지 확인하는 함수
+ */
+
 import { Region } from "react-native-maps";
 import { CoordType } from "../types";
 

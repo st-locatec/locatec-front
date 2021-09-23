@@ -5,7 +5,7 @@ import DefaultStepIndicator from "react-native-step-indicator";
 import useLayout from "../../../hooks/useLayout";
 import { WEB_REPORT_CONTENT_WIDTH } from "../../../constants/Size";
 import { report_stepIndicator } from "../../../constants/Strings";
-import { isWeb } from "../../../constants/Variables";
+import { isWeb } from "../../../constants/Constants";
 
 type Props = {
    position: number;

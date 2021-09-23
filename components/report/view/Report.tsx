@@ -13,29 +13,10 @@ import {
 import { View } from "../../Themed";
 import NaviButtons from "../elements/naviButtons";
 import StepIndicator from "../elements/StepIndicator";
+import { ReportViewProps } from "../types";
 import Complete from "./Complete";
 import Info from "./Info";
 import Map from "./Map";
-
-type Props = {
-   region: Region;
-   mapViewRef: React.RefObject<MapView>;
-   pagerRef: React.RefObject<FlatList>;
-   goNext: () => void;
-   goPrev: () => void;
-   position: number;
-   onAnimateRegion: AnimateRegionType;
-   locationType: LocationType;
-   settingLocationType: (v: LocationType) => void;
-   selectPhoto: (v: boolean) => Promise<void>;
-   photo: ImageLibraryReturn;
-   sendRequest: () => Promise<void>;
-   gotoHome: () => void;
-   gotoReport: () => void;
-   addPhoto: boolean;
-   settingAddPhoto: (v: boolean) => void;
-   onPressMap: (coord: CoordType) => void;
-};
 
 function Report({
    region,
@@ -55,7 +36,7 @@ function Report({
    onAnimateRegion,
    settingAddPhoto,
    onPressMap,
-}: Props) {
+}: ReportViewProps) {
    const layout = useLayout();
    const contentArray = [
       <Map

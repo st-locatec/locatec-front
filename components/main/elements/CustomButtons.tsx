@@ -1,6 +1,5 @@
 import React from "react";
 import { StyleSheet } from "react-native";
-import { ButtonProps, SpeedDialProps } from "react-native-elements";
 import { FLOATING_BUTTON_WIDTH } from "../../../constants/Size";
 import {
    Button,
@@ -9,6 +8,7 @@ import {
    ThemedSpeedDialProps,
 } from "../../Themed";
 
+// 좌측 하단 floating button 스타일 적용을 위한 한번 더 감싸기
 export function FloatingButton({ color, ...otherProps }: ThemedButtonProps) {
    return (
       <Button
@@ -21,6 +21,7 @@ export function FloatingButton({ color, ...otherProps }: ThemedButtonProps) {
    );
 }
 
+// 우측 하단 speedDial 스타일 적용을 위한 한번 더 감싸기
 export function CustomSpeedDial({
    color,
    actions,

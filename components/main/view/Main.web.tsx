@@ -1,21 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { StyleSheet } from "react-native";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 import { View } from "../../Themed";
-import { Icon, Image } from "react-native-elements";
-import { FLOATING_BUTTON_WIDTH } from "../../../constants/Size";
-import { CustomSpeedDial, FloatingButton } from "../elements/CustomButtons";
+import { CustomSpeedDial } from "../elements/CustomButtons";
 import Colors from "../../../constants/Colors";
 import { MarkerType, SMOKE, TRASHCAN } from "../../../types";
 import { smokingPlace, trashcan } from "../../../constants/Strings";
 import { MainViewType } from "../types";
-import { deltas } from "../../../constants/Variables";
+import { deltas } from "../../../constants/Constants";
 import isTwoRegionSame from "../../../utils/isTwoRegionSame";
+import makeGoogleIcon from "../../../utils/makeGoogleIcon";
+import LeftBottomButton from "../elements/LeftBottomButtons";
+import RightBottomSpeedDial from "../elements/RightBottomSpeedDial";
 
 function Main({
    myLocation,
-   isInsie,
+   isInside,
    markers,
+   markerImages,
    region,
    mapViewRef,
    isOpen,
@@ -27,39 +29,13 @@ function Main({
    onAnimateRegion,
    onPressMarker_Web,
 }: MainViewType) {
-   const [markerImages, setMarkerImages] = useState();
-
-   useEffect(() => {
-      let obj: any = {};
-      obj["user"] = require(`../../../assets/images/map_marker_user.png`);
-      obj[
-         `${SMOKE}`
-      ] = require(`../../../assets/images/map_marker_smoking.png`);
-      obj[
-         `${TRASHCAN}`
-      ] = require(`../../../assets/images/map_marker_trash.png`);
-
-      setMarkerImages(obj);
-   }, []);
-
-   const makeGoogleIcon = (image: string, size: number[]): any => {
-      return new window.google.maps.MarkerImage(
-         image,
-         null /* size is determined at runtime */,
-         null /* origin is 0,0 */,
-         null /* anchor is bottom center of the scaled image */,
-         new window.google.maps.Size(...size)
-      );
-   };
-
    return (
       <View style={{ flex: 1 }}>
          <View style={styles.container}>
             <MapView
-               ref={mapViewRef}
-               provider={PROVIDER_GOOGLE}
-               region={region}
                key="Gmap"
+               ref={mapViewRef}
+               region={region}
                style={styles.map}
                defaultZoom={18}
                options={{ disableDefaultUI: true }}
@@ -72,97 +48,63 @@ function Main({
                      latitude: region.latitude - 0.0000000000001,
                   })
                }>
-               {markerImages && isInsie && (
-                  <Marker
-                     key={`marker`}
-                     coordinate={myLocation}
-                     icon={markerImages["user"]}
-                     onPress={(v) =>
-                        onPressMarker_Web({
-                           latitude: v?.latLng?.lat(),
-                           longitude: v?.latLng?.lng(),
-                        })
-                     }
-                  />
-               )}
-               {markerImages &&
-                  markers
-                     ?.filter(
-                        (marker: MarkerType) => marker.type === locationType
-                     )
-                     .map((item: MarkerType, idx: number) => (
-                        <Marker
-                           key={`marker_${idx}`}
-                           coordinate={item.coords}
-                           icon={
-                              isTwoRegionSame(region, item.coords) && item.image
-                                 ? makeGoogleIcon(item.image, [400, 300])
-                                 : makeGoogleIcon(
-                                      markerImages[`${locationType}`],
-                                      [48, 48]
-                                   )
-                           }
-                           onPress={(v) =>
-                              onPressMarker_Web({
-                                 latitude: v?.latLng?.lat(),
-                                 longitude: v?.latLng?.lng(),
-                              })
-                           }
-                        />
-                     ))}
+               {
+                  // 유저 위치에 마커 보여주기. 학교 밖이면 보여주지 않음.
+                  // 웹에서는 누르면 그 곳으로 지도의 중심을 이동하도록 onPress 이벤트를 등록함
+                  markerImages && isInside && (
+                     <Marker
+                        key="marker_user"
+                        coordinate={myLocation}
+                        icon={makeGoogleIcon(markerImages["user"], [48, 48])}
+                        onPress={(v) =>
+                           onPressMarker_Web({
+                              latitude: v?.latLng?.lat(),
+                              longitude: v?.latLng?.lng(),
+                           })
+                        }
+                     />
+                  )
+               }
+               {
+                  // marker.filter() 를 통해 현재 보여줄 타입의 마커만 보여줌.
+                  markerImages &&
+                     markers
+                        ?.filter(
+                           (marker: MarkerType) => marker.type === locationType
+                        )
+                        .map((item: MarkerType, idx: number) => (
+                           <Marker
+                              key={`marker_${idx}`}
+                              coordinate={item.coords}
+                              icon={
+                                 isTwoRegionSame(region, item.coords) &&
+                                 item.image
+                                    ? makeGoogleIcon(item.image, [400, 300])
+                                    : makeGoogleIcon(
+                                         markerImages[`${locationType}`],
+                                         [48, 48]
+                                      )
+                              }
+                              onPress={(v) =>
+                                 onPressMarker_Web({
+                                    latitude: v?.latLng?.lat(),
+                                    longitude: v?.latLng?.lng(),
+                                 })
+                              }
+                           />
+                        ))
+               }
             </MapView>
-            <View style={[styles.buttonCol, { left: 0 }]}>
-               <FloatingButton
-                  color={Colors.colorSet.stRed}
-                  icon={{
-                     name: "location-arrow",
-                     type: "font-awesome",
-                     color: "white",
-                  }}
-                  onPress={animateToClosest}
-               />
-               <FloatingButton
-                  color={Colors.colorSet.stBlue}
-                  icon={{
-                     name: "plus",
-                     type: "font-awesome",
-                     color: "white",
-                  }}
-                  onPress={goToReport}
-               />
-            </View>
+            <LeftBottomButton
+               goToReport={goToReport}
+               animateToClosest={animateToClosest}
+            />
          </View>
-         <CustomSpeedDial
+         <RightBottomSpeedDial
             isOpen={isOpen}
-            icon={{
-               name: locationType,
-               color: "#fff",
-               type: "font-awesome-5",
-            }}
-            openIcon={{ name: "close", color: "#fff" }}
-            onOpen={toggleIsOpen}
-            onClose={toggleIsOpen}
-            color={Colors.colorSet.stGray}
-            actions={[
-               {
-                  icon: {
-                     name: "smoking",
-                     color: "#fff",
-                     type: "font-awesome-5",
-                  },
-                  title: smokingPlace,
-                  onPress: () => changeLocationType(SMOKE),
-               },
-               {
-                  icon: {
-                     name: "trash",
-                     color: "#fff",
-                     type: "font-awesome-5",
-                  },
-                  title: trashcan,
-                  onPress: () => changeLocationType(TRASHCAN),
-               },
-            ]}
+            locationType={locationType}
+            toggleIsOpen={toggleIsOpen}
+            changeLocationType={changeLocationType}
          />
       </View>
    );
@@ -189,16 +131,6 @@ const styles = StyleSheet.create({
    marker: {
       width: 40,
       height: 40,
-   },
-   buttonCol: {
-      position: "absolute",
-      bottom: 10,
-      height: FLOATING_BUTTON_WIDTH * 2 + 20,
-      backgroundColor: "transparent",
-      justifyContent: "space-around",
-      paddingLeft: 20,
-      paddingRight: 20,
-      zIndex: 1,
    },
    calloutContainer: {
       overflow: "hidden",

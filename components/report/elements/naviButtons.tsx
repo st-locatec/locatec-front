@@ -1,5 +1,5 @@
 import React from "react";
-import { isWeb } from "../../../constants/Variables";
+import { isWeb } from "../../../constants/Constants";
 import { View, Button } from "../../Themed";
 
 type Props = {

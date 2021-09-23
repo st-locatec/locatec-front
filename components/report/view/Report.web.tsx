@@ -1,12 +1,7 @@
 import React from "react";
 import { FlatList, StyleSheet } from "react-native";
 import MapView, { Region } from "react-native-maps";
-import {
-   CoordType,
-   ImageLibraryReturn,
-   LocationType,
-   ThemeScheme,
-} from "../../../types";
+import { CoordType, ImageLibraryReturn, LocationType } from "../../../types";
 
 import { View } from "../../Themed";
 import NaviButtons from "../elements/naviButtons";
@@ -16,25 +11,7 @@ import Info from "./Info";
 import Map from "./Map.web";
 import { WEB_REPORT_CONTENT_WIDTH } from "../../../constants/Size";
 import useLayout, { LayoutType } from "../../../hooks/useLayout";
-
-type Props = {
-   region: Region;
-   mapViewRef: React.RefObject<MapView>;
-   pagerRef: React.RefObject<FlatList>;
-   goNext: () => void;
-   goPrev: () => void;
-   position: number;
-   locationType: LocationType;
-   settingLocationType: (v: LocationType) => void;
-   selectPhoto: (v: boolean) => Promise<void>;
-   photo: ImageLibraryReturn;
-   sendRequest: () => Promise<void>;
-   gotoHome: () => void;
-   gotoReport: () => void;
-   addPhoto: boolean;
-   settingAddPhoto: (v: boolean) => void;
-   onPressMap: (v: CoordType) => void;
-};
+import { ReportViewProps } from "../types";
 
 function Report({
    region,
@@ -53,7 +30,7 @@ function Report({
    addPhoto,
    settingAddPhoto,
    onPressMap,
-}: Props) {
+}: ReportViewProps) {
    const layout = useLayout();
 
    const contentArray = [

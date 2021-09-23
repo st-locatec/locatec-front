@@ -1,3 +1,4 @@
+// 색상 전역관리
 const tintColorLight = "#2f95dc";
 const tintColorDark = "#fff";
 const buttonBackgroundColor = "#2196f3";

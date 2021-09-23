@@ -1,41 +1,35 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { FlatList } from "react-native";
 import MapView, { Region } from "react-native-maps";
 import { useDispatch } from "react-redux";
+import { centerSchool, deltas, isWeb } from "../../../constants/Constants";
 import { INSIDE_SHCOOL } from "../../../constants/Size";
-import { centerSchool, deltas } from "../../../constants/Variables";
-import { loading, unloading } from "../../../modules/loading";
 import {
    CoordType,
+   ImageLibraryReturn,
    LocationType,
    RootStackScreenProps,
    SMOKE,
 } from "../../../types";
-import getMyLocation from "../../../utils/getMyLocation";
-import Report from "../view/Report";
+import getMyRegion from "../../../utils/getMyRegion";
 import * as ImagePicker from "expo-image-picker";
+import Alert from "../../elements/Alert";
 import {
    changePhotoContent,
    changePhotoTitle,
 } from "../../../constants/Strings";
-import Alert from "../../elements/Alert";
-import { FlatList } from "react-native";
+import { loading, unloading } from "../../../modules/loading";
+import Report from "../view/Report";
 
-type Props = {};
-
-function ReportContainer({
-   navigation,
-}: Props & RootStackScreenProps<"Report">) {
+function ReportContainer({ navigation }: RootStackScreenProps<"Report">) {
    const [region, setRegion] = useState<Region>(centerSchool);
    const [refresh, setRefresh] = useState<number>(0);
    const [position, setPosition] = useState<number>(0);
    const [locationType, setLocationType] = useState<LocationType>(SMOKE);
    const mapViewRef = useRef<MapView>() as React.RefObject<MapView>;
    const pagerRef = useRef<FlatList>() as React.RefObject<FlatList>;
-   const [prevPhoto, setPrevPhoto] =
-      useState<ImagePicker.ImagePickerResult | null>(null);
-   const [photo, setPhoto] = useState<ImagePicker.ImagePickerResult | null>(
-      null
-   );
+   const [prevPhoto, setPrevPhoto] = useState<ImageLibraryReturn>(null);
+   const [photo, setPhoto] = useState<ImageLibraryReturn>(null);
    const [addPhoto, setAddPhoto] = useState(false);
    const dispatch = useDispatch();
 
@@ -44,7 +38,7 @@ function ReportContainer({
          let initialCoords: Region = centerSchool;
 
          try {
-            const parsed = await getMyLocation();
+            const parsed = await getMyRegion();
             if (
                parsed.latitude <= region.latitude + INSIDE_SHCOOL &&
                parsed.longitude <= region.longitude + INSIDE_SHCOOL &&
@@ -89,18 +83,7 @@ function ReportContainer({
    const settingAddPhoto = (v: boolean) => {
       setAddPhoto(v);
    };
-   const onAnimateRegion = (
-      reg: Region,
-      details?:
-         | {
-              isGesture: boolean;
-           }
-         | undefined
-   ) => {
-      if (!details?.isGesture) {
-         setRegion(reg);
-      }
-   };
+
    const pickPhoto = async () => {
       let res = await ImagePicker.getMediaLibraryPermissionsAsync();
       if (!res.granted) {
@@ -129,13 +112,13 @@ function ReportContainer({
          await pickPhoto();
       } else if (v) {
          Alert(
-            changePhotoTitle,
+            isWeb ? "" : changePhotoTitle,
             changePhotoContent,
             () => {},
             () => {
+               pickPhoto();
                setPrevPhoto(photo);
                setPhoto(null);
-               pickPhoto();
             }
          );
       }
@@ -151,17 +134,38 @@ function ReportContainer({
       goNext();
       dispatch(unloading());
    };
+
    const gotoHome = () => {
+      scrollToIndex(0);
       navigation.navigate("Main");
    };
+
    const gotoReport = () => {
       setRefresh((prev) => prev + 1);
       scrollToIndex(0);
       setLocationType(SMOKE);
       setPhoto(null);
    };
+
+   const onAnimateRegion = (
+      reg: Region,
+      details?:
+         | {
+              isGesture: boolean;
+           }
+         | undefined
+   ) => {
+      if (!details?.isGesture) {
+         setRegion(reg);
+      }
+   };
+
    const onPressMap = (coordinate: CoordType) => {
-      mapViewRef.current?.animateToRegion({ ...coordinate, ...deltas }, 500);
+      if (isWeb) {
+         setRegion({ ...coordinate, ...deltas });
+      } else {
+         mapViewRef.current?.animateToRegion({ ...coordinate, ...deltas }, 500);
+      }
    };
 
    return (
@@ -169,19 +173,19 @@ function ReportContainer({
          region={region}
          mapViewRef={mapViewRef}
          pagerRef={pagerRef}
-         goNext={goNext}
-         goPrev={goPrev}
          position={position}
          locationType={locationType}
-         settingLocationType={settingLocationType}
-         selectPhoto={selectPhoto}
          photo={photo}
-         sendRequest={sendRequest}
-         gotoHome={gotoHome}
-         gotoReport={gotoReport}
          addPhoto={addPhoto}
-         onAnimateRegion={onAnimateRegion}
+         goNext={goNext}
+         goPrev={goPrev}
+         selectPhoto={selectPhoto}
+         settingLocationType={settingLocationType}
          settingAddPhoto={settingAddPhoto}
+         sendRequest={sendRequest}
+         gotoReport={gotoReport}
+         gotoHome={gotoHome}
+         onAnimateRegion={onAnimateRegion}
          onPressMap={onPressMap}
       />
    );

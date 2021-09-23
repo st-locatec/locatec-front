@@ -11,14 +11,15 @@ export type stylesFuncType = {
 };
 
 export type MainViewType = {
-   isInsie: boolean;
+   isInside: boolean;
    myLocation: Region;
    markers: MarkerType[] | undefined;
+   markerImages: any | undefined;
    region: Region;
    mapViewRef: React.RefObject<MapView>;
-   onAnimateRegion: AnimateRegionType;
    isOpen: boolean;
    locationType: LocationType;
+   onAnimateRegion: AnimateRegionType;
    toggleIsOpen: () => void;
    goToReport: () => void;
    changeLocationType: (v: LocationType) => void;
