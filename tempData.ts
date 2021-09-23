@@ -1,4 +1,4 @@
-import { MarkerType, SMOKE, TRASHCAN } from "../../types";
+import { MarkerType, SMOKE, TRASHCAN } from "./types";
 
 export const locate: MarkerType[] = [
    {

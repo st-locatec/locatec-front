@@ -11,18 +11,15 @@ import { DARK, LIGHT } from "./types";
 // 리덕스 관련
 import { applyMiddleware, createStore } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
-import createSagaMiddleware from "redux-saga";
 import { Provider, useSelector } from "react-redux";
 import logger from "redux-logger";
-import rootReducer, { rootSaga, RootState } from "./modules";
+import rootReducer, { RootState } from "./modules";
 
 // 리덕스 사용
-const sagaMiddleware = createSagaMiddleware();
 const store = createStore(
    rootReducer,
-   composeWithDevTools(applyMiddleware(sagaMiddleware, logger))
+   composeWithDevTools(applyMiddleware(logger))
 );
-sagaMiddleware.run(rootSaga);
 
 // 루트 앱. 전체 영역을 감싸고, 리덕스 Provider 적용.
 // 이 아래에선 리덕스 사용을 위해 RootApp과 App 분리

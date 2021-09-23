@@ -1,5 +1,5 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js remove @types/react-native-loading-spinner-overlay
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js remove redux-saga @types/redux-saga
 
 PATH: 
   C:\Users\gpfqp\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\local\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\gpfqp\bin;C:\Windows\system32;C:\jdk13.0.2\bin;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\Microsoft SQL Server\110\Tools\Binn;C:\Program Files\Microsoft SQL Server\120\Tools\Binn;C:\Program Files (x86)\Microsoft SQL Server\100\Tools\Binn;C:\Program Files\Microsoft SQL Server\100\Tools\Binn;C:\Program Files\Microsoft SQL Server\100\DTS\Binn;C:\Program Files (x86)\Microsoft SQL Server\90\Tools\binn;C:\Program Files (x86)\Yarn\bin;C:\ProgramData\chocolatey\bin;E:\anaconda3;E:\anaconda3\Library;E:\anaconda3\Scripts;C:\Program Files\MySQL\MySQL Server 8.0\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;C:\Windows\System32\OpenSSH;C:\Program Files\Docker\Docker;C:\Program Files\Git\cmd;C:\Program Files\PuTTY;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;F:\android-studio-sdk;F:\android-studio-sdk\platform-tools;C:\Program Files\nodejs;F:\android-studio-sdk\tools;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;F:\Ruby27-x64\bin;C:\Program Files\MySQL\MySQL Shell 8.0\bin;C:\Users\gpfqp\AppData\Local\Programs\Python\Python39\Scripts;C:\Users\gpfqp\AppData\Local\Programs\Python\Python39;C:\Users\gpfqp\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Java\jdk-9.0.4\bin;C:\Users\gpfqp\AppData\Local\atom\bin;C:\Users\gpfqp\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\gpfqp\AppData\Local\GitHubDesktop\bin;C:\Users\gpfqp\AppData\Local\Yarn\bin;E:\venvs;C:\Program Files\MySQL\MySQL Server 8.0\bin;C:\Users\gpfqp\AppData\Local\Microsoft\WindowsApps;C:\Program Files\JetBrains\DataGrip 2021.1.1\bin;C:\Users\gpfqp\AppData\Roaming\npm;C:\Program Files\Git\usr\bin\vendor_perl;C:\Program Files\Git\usr\bin\core_perl
@@ -25,7 +25,8 @@ npm manifest:
         "ios": "expo start --ios",
         "web": "expo start --web",
         "eject": "expo eject",
-        "postinstall": "patch-package"
+        "postinstall": "patch-package",
+        "deploy": "expo build:web & firebase deploy & expo publish"
      },
      "jest": {
         "preset": "jest-expo"
@@ -39,7 +40,6 @@ npm manifest:
         "@types/react-native-material-menu": "^1.0.5",
         "@types/react-redux": "^7.1.18",
         "@types/redux-logger": "^3.0.9",
-        "@types/redux-saga": "^0.10.5",
         "expo": "~42.0.1",
         "expo-app-loading": "^1.1.2",
         "expo-asset": "~8.3.2",
@@ -72,8 +72,7 @@ npm manifest:
         "react-redux": "^7.2.5",
         "redux": "^4.1.1",
         "redux-devtools-extension": "^2.13.9",
-        "redux-logger": "^3.0.6",
-        "redux-saga": "^1.1.3"
+        "redux-logger": "^3.0.6"
      },
      "devDependencies": {
         "@babel/core": "^7.9.0",

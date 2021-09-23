@@ -1,14 +1,10 @@
 import { combineReducers } from "redux";
-import { all } from "redux-saga/effects";
 import loading from "./loading";
 import theme from "./theme";
+import markers from "./markers";
 
 // redux reducer 결합
-const rootReducer = combineReducers({ loading, theme });
-
-export function* rootSaga() {
-   yield all([]);
-}
+const rootReducer = combineReducers({ loading, theme, markers });
 
 export default rootReducer;
 

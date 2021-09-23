@@ -6,6 +6,8 @@ import { useDispatch } from "react-redux";
 import { setTheme } from "./modules/theme";
 import { LIGHT } from "./types";
 import { View, ViewProps } from "./components/Themed";
+import { setMarkers } from "./modules/markers";
+import { locate } from "./tempData";
 
 function AppInit({ children }: ViewProps) {
    const [isLoadingComplete, setLoadingComplete] = useState(false); // 로딩 상태
@@ -27,6 +29,7 @@ function AppInit({ children }: ViewProps) {
          dispatch(setTheme(theme));
 
          // 위치 데이터 불러들이기.
+         dispatch(setMarkers(locate));
       } catch (e) {
          throw e;
       }

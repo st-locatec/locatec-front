@@ -11,20 +11,21 @@ import {
 } from "../../../types";
 import calculateEuclidean from "../../../utils/calculateEuclidean";
 import { INSIDE_SHCOOL } from "../../../constants/Size";
-import { locate } from "../tempData";
 import { centerSchool, deltas } from "../../../constants/Constants";
 import getMyLocation from "../../../utils/getMyRegion";
 import isTwoRegionSame from "../../../utils/isTwoRegionSame";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../modules";
 
 function MainContainer({ navigation }: RootStackScreenProps<"Main">) {
    const [myLocation, setMyLocation] = useState<Region>(centerSchool); // 유저 위치
    const [isInside, setIIsInside] = useState<boolean>(false); // 유저가 학교 안인지
-   const [markers, setMarkers] = useState<MarkerType[]>(); // 마커들 저장
    const [region, setRegion] = useState<Region>(centerSchool); // 화면 중심 region
    const [locationType, setLocationType] = useState<LocationType>(SMOKE); // 보여줄 마커 타입. 흡연장소 또는 쓰레기통
    const [isOpen, setIsOpen] = useState<boolean>(false); // 오른쪽 하단 speedDial이 열려있는지 닫혀있는지
    const [markerImages, setMarkerImages] = useState<any>(); // 마커 이미지들
    const mapViewRef = useRef<MapView>() as React.RefObject<MapView>; // 지도 reference
+   const markers = useSelector(({ markers }: RootState) => markers); // 리덕스에 저장된 마커 불러들이기
 
    /**
     * 현재 유저의 좌표가 학교 중심좌표에서 0.007 이상 벗어난 위도 경도면 학교 중심을,
@@ -62,7 +63,6 @@ function MainContainer({ navigation }: RootStackScreenProps<"Main">) {
          }
       };
       mainInit();
-      setMarkers(locate);
    }, []);
 
    /**

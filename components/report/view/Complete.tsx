@@ -11,6 +11,7 @@ import {
    thankyou_for_using,
 } from "../../../constants/Strings";
 
+// 애니메이션 로드
 const completion_animation = require("../../../assets/animations/completion.json");
 
 type Props = {
@@ -25,7 +26,7 @@ function Complete({ gotoHome, gotoReport }: Props) {
             <LottieView
                source={completion_animation}
                autoPlay={true}
-               loop={false}
+               loop={true}
                style={{ width: 300, height: 225 }}
             />
             <View style={styles.textContainer}>
