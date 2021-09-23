@@ -15,8 +15,11 @@ type Props = {
 };
 
 function Menu({ locationType, settingLocationType }: Props) {
+   // 메뉴 보여줄지 말지를 저장하는 상태
    const [visible, setVisible] = useState(false);
 
+   // 메뉴 닫는 콜백
+   // type이 들어있으면 locationType를 설정하고 닫는다.
    const hideMenu = (type?: LocationType) => {
       setVisible(false);
       if (type) {

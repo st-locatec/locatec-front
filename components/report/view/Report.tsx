@@ -1,15 +1,7 @@
 import React from "react";
 import { FlatList, StyleSheet } from "react-native";
-import MapView, { Region } from "react-native-maps";
-import useLayout from "../../../hooks/useLayout";
-import {
-   AnimateRegionType,
-   CoordType,
-   ImageLibraryReturn,
-   LocationType,
-   ThemeScheme,
-} from "../../../types";
-
+import { WEB_REPORT_CONTENT_WIDTH } from "../../../constants/Size";
+import useLayout, { LayoutType } from "../../../hooks/useLayout";
 import { View } from "../../Themed";
 import NaviButtons from "../elements/naviButtons";
 import StepIndicator from "../elements/StepIndicator";
@@ -38,6 +30,8 @@ function Report({
    onPressMap,
 }: ReportViewProps) {
    const layout = useLayout();
+
+   // 각 페이지에 보여줄 화면 배열
    const contentArray = [
       <Map
          region={region}
@@ -56,50 +50,56 @@ function Report({
       />,
       <Complete gotoHome={gotoHome} gotoReport={gotoReport} />,
    ];
+
    return (
-      <View style={styles.container}>
-         <StepIndicator position={position} />
+      <View style={{ flex: 1 }}>
+         <View style={{ alignItems: "center" }}>
+            <StepIndicator position={position} />
+         </View>
          <FlatList
             ref={pagerRef}
             initialScrollIndex={0}
             horizontal={true}
             data={contentArray}
-            scrollEnabled={false}
             keyExtractor={(item, index) => `flaylist_content_${index}`}
+            scrollEnabled={false}
             showsHorizontalScrollIndicator={false}
             renderItem={({ item, index }) => (
                <View
                   key={`flaylist_content_${index}`}
-                  style={[
-                     {
-                        width: layout.window.width,
-                        height: "100%",
-                     },
-                  ]}>
-                  {item}
+                  style={[stylesFunc(layout).pagerChildCaontainer]}>
+                  <View style={stylesFunc(layout).pageChildInside}>{item}</View>
                </View>
-            )}></FlatList>
-         <View style={{ height: 50 }}>
-            {position !== 2 && (
-               <NaviButtons
-                  position={position}
-                  goNext={goNext}
-                  goPrev={goPrev}
-                  last={position === 1}
-               />
             )}
+         />
+         <View style={{ alignItems: "center" }}>
+            <View style={[stylesFunc(layout).pageChildInside, { height: 60 }]}>
+               {position !== 2 && (
+                  <NaviButtons
+                     position={position}
+                     goNext={goNext}
+                     goPrev={goPrev}
+                     last={position === 1}
+                  />
+               )}
+            </View>
          </View>
       </View>
    );
 }
-
-const styles = StyleSheet.create({
-   container: {
-      flex: 1,
-   },
-   inputContainer: {
-      flex: 1,
-   },
-});
+const stylesFunc = ({ window: { width }, isSmallDevice }: LayoutType) =>
+   StyleSheet.create({
+      pagerChildCaontainer: {
+         width: width,
+         height: "100%",
+         alignItems: "center",
+         justifyContent: "center",
+      },
+      pageChildInside: {
+         width: isSmallDevice ? width : WEB_REPORT_CONTENT_WIDTH,
+         height: "100%",
+         overflow: "hidden",
+      },
+   });
 
 export default Report;

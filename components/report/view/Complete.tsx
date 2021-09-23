@@ -1,3 +1,6 @@
+/**
+ * 요청 완료시 나오는 화면
+ */
 import React from "react";
 import LottieView from "lottie-react-native";
 import { StyleSheet } from "react-native";

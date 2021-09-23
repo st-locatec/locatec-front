@@ -14,6 +14,7 @@ import { ImageLibraryReturn, LocationType } from "../../../types";
 import { Button, ListItem, Text, View } from "../../Themed";
 import Menu from "../elements/Menu";
 
+// Prop 타입 선언
 type Props = {
    locationType: LocationType;
    settingLocationType: (v: LocationType) => void;
@@ -35,6 +36,8 @@ function Info({
 }: Props) {
    const layout = useLayout();
 
+   // 이 element에서 사용할 window width를 작은 화면이냐, 웹이냐에 따라 다르게 정의
+   // 이 width에 맞춰 이미지 크기를 조절한다.
    const width =
       isWeb && !layout.isSmallDevice
          ? WEB_REPORT_CONTENT_WIDTH
@@ -42,6 +45,8 @@ function Info({
    const IMAGE_WIDTH: number = width * 0.8;
    const IMAGE_HEIGHT: number = ((width * 0.8) / 4) * 3;
 
+   // 사진 등록을 눌렀을때 호출되는 콜백
+   // addPhoto를 true로 바꾸고, selectPhoto를 호출하여 사진을 고르도록 한다.
    const onPressAddPhoto = () => {
       settingAddPhoto(true);
       selectPhoto(addPhoto);

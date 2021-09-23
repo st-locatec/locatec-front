@@ -17,12 +17,14 @@ type Props = {
 };
 
 function Menu({ locationType, settingLocationType }: Props) {
-   const hideMenu = (type?: LocationType) => {
-      if (type) {
-         settingLocationType(type);
-      }
+   // 아이템을 눌렀을 시 호출되는 콜백
+   // locationType를 설정한다.
+   const onPressItem = (type: LocationType) => {
+      settingLocationType(type);
    };
 
+   // native 환경에서 사용하는 react-native-material-menu 라이브러리가 웹에서는 동작하지 않아
+   // react-native 기본 element인 Tooltip을 마치 메뉴인것처럼 사용
    return (
       <Tooltip
          popover={
@@ -32,11 +34,12 @@ function Menu({ locationType, settingLocationType }: Props) {
                   borderWidth: 1,
                   borderColor: Colors.colorSet.stGray,
                   borderTopWidth: 0,
+                  zIndex: 10,
                }}>
                {locStrArray.map((item, idx) => (
                   <ListItem
                      key={idx}
-                     onPress={() => hideMenu(mapStrToLocType(item))}
+                     onPress={() => onPressItem(mapStrToLocType(item))}
                      style={{
                         height: MENU_ITEM_HEIGHT - 1,
                         width: MENU_ITEM_WIDTH - 2,
@@ -50,7 +53,6 @@ function Menu({ locationType, settingLocationType }: Props) {
          withOverlay={false}
          withPointer={false}
          containerStyle={[styles.menuStyle]}
-         onClose={hideMenu}
          ModalComponent={Modal}>
          <View style={styles.anchorContainer}>
             <View style={styles.anchorStyle}>

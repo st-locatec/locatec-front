@@ -16,6 +16,7 @@ export type LayoutType = {
 };
 
 // 레이아웃 hook
+// 너비가 800px 이하일경우 작은 화면이라고 함.
 export default function useLayout(): LayoutType {
    const [dimensions, setDimensions] = useState<LayoutType>({
       window: Dimensions.get("window"),
