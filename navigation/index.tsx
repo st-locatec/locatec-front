@@ -13,7 +13,6 @@ import MainScreen from "../screens/MainScreen";
 import { DARK, RootStackParamList, ThemeScheme } from "../types";
 import { appName } from "../constants/Strings";
 import Switch from "../components/elements/Switch";
-import linking from "./LinkingConfiguration";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 

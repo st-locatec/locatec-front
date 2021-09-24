@@ -1,8 +1,8 @@
 import AnimatedLottieView from "lottie-react-native";
 import React from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../modules";
-import { View } from "./Themed";
+import { RootState } from "../../modules";
+import { View } from "../Themed";
 
 export default function Loading() {
    // 리덕스 store로부터 loading 상태 불러들이기.
@@ -24,7 +24,7 @@ export default function Loading() {
                   alignItems: "center",
                }}>
                <AnimatedLottieView
-                  source={require("../assets/animations/loading.json")}
+                  source={require("../../assets/animations/loading.json")}
                   autoPlay
                   loop
                   colorFilters={[

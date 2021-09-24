@@ -5,7 +5,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import AppInit from "./AppInit";
 import Navigation from "./navigation";
 
-import Loading from "./components/Loading";
+import Loading from "./components/elements/Loading";
 import { DARK, LIGHT } from "./types";
 
 // 리덕스 관련
