@@ -10,9 +10,17 @@ import ReportScreen from "../screens/ReportScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import MainScreen from "../screens/MainScreen";
 
-import { DARK, RootStackParamList, ThemeScheme } from "../types";
+import {
+   DARK,
+   RootStackParamList,
+   RootStackScreenProps,
+   ThemeScheme,
+} from "../types";
 import { appName } from "../constants/Strings";
 import Switch from "../components/elements/Switch";
+import { Icon, View } from "../components/Themed";
+import { isWeb } from "../constants/Constants";
+import linking from "./LinkingConfiguration";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -25,6 +33,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
  *
  * Report : 추가 요청을 보내기위한 페이지
  *  */
+
 export default function Navigation({
    colorScheme,
 }: {
@@ -32,7 +41,8 @@ export default function Navigation({
 }) {
    return (
       <NavigationContainer
-         theme={colorScheme === DARK ? DarkTheme : DefaultTheme}>
+         theme={colorScheme === DARK ? DarkTheme : DefaultTheme}
+         linking={linking}>
          <Stack.Navigator>
             <Stack.Screen
                name="Main"
@@ -50,10 +60,21 @@ export default function Navigation({
             <Stack.Screen
                name="Report"
                component={ReportScreen}
-               options={{
+               options={({ navigation }: RootStackScreenProps<"Report">) => ({
                   title: "추가 요청",
                   headerTitleStyle: { fontFamily: "notosans" },
-               }}
+                  headerLeft: () => (
+                     <Icon
+                        name="arrow-back"
+                        onPress={() => navigation.navigate("Main")}
+                        containerStyle={{
+                           marginRight: isWeb ? 0 : 10,
+                           marginLeft: isWeb ? 10 : 0,
+                        }}
+                        size={24}
+                     />
+                  ),
+               })}
             />
          </Stack.Navigator>
       </NavigationContainer>
