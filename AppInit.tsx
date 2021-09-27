@@ -7,7 +7,8 @@ import { setTheme } from "./modules/theme";
 import { LIGHT } from "./types";
 import { View, ViewProps } from "./components/Themed";
 import { setMarkers } from "./modules/markers";
-import { locate } from "./tempData";
+import { getWholeListApi } from "./api/wholeList";
+import { NO_DATA } from "./api/serverError";
 
 function AppInit({ children }: ViewProps) {
    const [isLoadingComplete, setLoadingComplete] = useState(false); // 로딩 상태
@@ -29,9 +30,17 @@ function AppInit({ children }: ViewProps) {
          dispatch(setTheme(theme));
 
          // 위치 데이터 불러들이기.
-         dispatch(setMarkers(locate));
+         const res = await getWholeListApi();
+         if (res.response !== NO_DATA) {
+            const processed = res.response.map((item) => ({
+               type: item.type,
+               coords: { latitude: item.latitude, longitude: item.longitude },
+               image: item.imageUrl,
+            }));
+            dispatch(setMarkers(processed));
+         }
       } catch (e) {
-         throw e;
+         console.log(e);
       }
    };
 

@@ -24,7 +24,9 @@ export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
    NativeStackScreenProps<RootStackParamList, Screen>;
 
 // launchImageLibraryAsync 함수 결과 타입
-export type ImageLibraryReturn = (ImagePickerResult & { uri?: string }) | null;
+export type ImageLibraryReturn =
+   | (ImagePickerResult & { uri?: string; base64?: string })
+   | null;
 
 //좌표 타입
 export type CoordType = {

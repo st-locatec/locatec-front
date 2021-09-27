@@ -20,6 +20,8 @@ import {
 } from "../../../constants/Strings";
 import { loading, unloading } from "../../../modules/loading";
 import Report from "../view/Report";
+import { setSnackbar } from "../../../modules/snackbar";
+import { sendRequestApi } from "../../../api/requestList";
 
 function ReportContainer({ navigation }: RootStackScreenProps<"Report">) {
    const [region, setRegion] = useState<Region>(centerSchool); // 현재 지도의 중심
@@ -113,6 +115,7 @@ function ReportContainer({ navigation }: RootStackScreenProps<"Report">) {
          allowsEditing: true,
          aspect: [4, 3],
          quality: 1,
+         base64: true,
       });
 
       // 취소 됐으면 이전 사진을, 아니면 결과를 넣는다.
@@ -145,12 +148,19 @@ function ReportContainer({ navigation }: RootStackScreenProps<"Report">) {
    // 추가 요청 서버로 보내기.
    const sendRequest = async () => {
       dispatch(loading());
-      const obj = {
-         type: locationType,
-         region: region,
-         photo: addPhoto ? photo : null,
-      };
-      goNext();
+      try {
+         const obj = {
+            type: locationType,
+            latitude: region.latitude,
+            longitude: region.longitude,
+            image: addPhoto ? photo.base64 : null,
+         };
+         await sendRequestApi(obj);
+         goNext();
+      } catch (e) {
+         // 요청 실패시 snackbar로 안내.
+         dispatch(setSnackbar("요청에 실패했습니다. 다시 시도해주세요."));
+      }
       dispatch(unloading());
    };
 
