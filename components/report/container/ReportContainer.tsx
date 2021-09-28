@@ -175,6 +175,7 @@ function ReportContainer({ navigation }: RootStackScreenProps<"Report">) {
       // 초기화
       setRefresh((prev) => prev + 1);
       setPhoto(null);
+      setAddPhoto(false);
       setLocationType(SMOKE);
       // 이동
       scrollToIndex(0);

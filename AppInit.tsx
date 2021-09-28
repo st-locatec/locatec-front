@@ -34,7 +34,10 @@ function AppInit({ children }: ViewProps) {
          if (res.response !== NO_DATA) {
             const processed = res.response.map((item) => ({
                type: item.type,
-               coords: { latitude: item.latitude, longitude: item.longitude },
+               coords: {
+                  latitude: parseFloat(item.latitude),
+                  longitude: parseFloat(item.longitude),
+               },
                image: item.imageUrl,
             }));
             dispatch(setMarkers(processed));
