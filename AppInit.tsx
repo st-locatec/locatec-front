@@ -31,8 +31,8 @@ function AppInit({ children }: ViewProps) {
 
          // 위치 데이터 불러들이기.
          const res = await getWholeListApi();
-         if (res.response !== NO_DATA) {
-            const processed = res.response.map((item) => ({
+         if (res !== NO_DATA) {
+            const processed = res.map((item) => ({
                type: item.type,
                coords: {
                   latitude: parseFloat(item.latitude),
