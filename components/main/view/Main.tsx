@@ -7,13 +7,11 @@ import { MarkerType } from "../../../types";
 import { MainViewType } from "../types";
 import LeftBottomButton from "../elements/LeftBottomButtons";
 import RightBottomSpeedDial from "../elements/RightBottomSpeedDial";
-import { centerSchool } from "../../../constants/Constants";
 import { Svg, Image as ImageSvg } from "react-native-svg";
 import { Image } from "react-native-elements";
 
 function Main({
    myLocation,
-   isInside,
    markers,
    markerImages,
    region,
@@ -30,15 +28,14 @@ function Main({
          <View style={styles.container}>
             <MapView
                key="Gmap"
-               initialRegion={centerSchool}
                ref={mapViewRef}
                region={region}
-               showsUserLocation={isInside ? false : true}
+               showsUserLocation={myLocation.isInside ? false : true}
                style={[styles.map]}>
                {
                   // 유저 위치에 마커 보여주기. 학교 밖이면 보여주지 않음.
-                  markerImages && isInside && (
-                     <Marker key="marker_user" coordinate={myLocation}>
+                  markerImages && myLocation.isInside && (
+                     <Marker key="marker_user" coordinate={myLocation.region}>
                         <View style={[styles.markerWrap]}>
                            <Image
                               source={markerImages["user"]}

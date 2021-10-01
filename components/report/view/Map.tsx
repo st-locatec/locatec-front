@@ -5,7 +5,7 @@ import MapView, { MapViewProps } from "../elements/MapView";
 
 type Props = {} & MapViewProps;
 
-function Map({ region, mapViewRef, onPressMap, onAnimateRegion }: Props) {
+function Map({ region, mapViewRef, onPressMap }: Props) {
    return (
       <View style={styles.container}>
          <View style={styles.labelContainer}>
@@ -17,7 +17,6 @@ function Map({ region, mapViewRef, onPressMap, onAnimateRegion }: Props) {
             region={region}
             mapViewRef={mapViewRef}
             onPressMap={onPressMap}
-            onAnimateRegion={onAnimateRegion}
          />
       </View>
    );

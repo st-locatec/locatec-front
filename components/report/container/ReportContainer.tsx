@@ -1,9 +1,8 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { FlatList } from "react-native";
 import MapView, { Region } from "react-native-maps";
-import { useDispatch } from "react-redux";
-import { centerSchool, deltas, isWeb } from "../../../constants/Constants";
-import { INSIDE_SHCOOL } from "../../../constants/Size";
+import { useDispatch, useSelector } from "react-redux";
+import { deltas, isWeb } from "../../../constants/Constants";
 import {
    CoordType,
    ImageLibraryReturn,
@@ -11,7 +10,6 @@ import {
    RootStackScreenProps,
    SMOKE,
 } from "../../../types";
-import getMyRegion from "../../../utils/getMyRegion";
 import * as ImagePicker from "expo-image-picker";
 import Alert from "../../elements/Alert";
 import {
@@ -22,10 +20,9 @@ import { loading, unloading } from "../../../modules/loading";
 import Report from "../view/Report";
 import { setSnackbar } from "../../../modules/snackbar";
 import { sendRequestApi } from "../../../api/requestList";
+import { RootState } from "../../../modules";
 
 function ReportContainer({ navigation }: RootStackScreenProps<"Report">) {
-   const [region, setRegion] = useState<Region>(centerSchool); // 현재 지도의 중심
-   const [refresh, setRefresh] = useState<number>(0); // 요청 완료 후 다시 요청보낼때 초기화하기 위한 상태
    const [position, setPosition] = useState<number>(0); // 현재 페이지
    const [locationType, setLocationType] = useState<LocationType>(SMOKE); // 유저가 고른 location type
    const [photo, setPhoto] = useState<ImageLibraryReturn>(null); // 유저가 고른 사진
@@ -33,42 +30,9 @@ function ReportContainer({ navigation }: RootStackScreenProps<"Report">) {
    const [addPhoto, setAddPhoto] = useState(false); // 사진을 넣었는지 안넣었는지
    const mapViewRef = useRef<MapView>() as React.RefObject<MapView>; // 지도 reference
    const pagerRef = useRef<FlatList>() as React.RefObject<FlatList>; // 페이지 reference
+   const myLocation = useSelector(({ myLocation }: RootState) => myLocation); // 현재 유저의 위치
+   const [region, setRegion] = useState<Region>(myLocation.region); // 현재 지도의 중심
    const dispatch = useDispatch();
-
-   /**
-    * 현재 유저의 좌표가 학교 중심좌표에서 0.007 이상 벗어난 위도 경도면 학교 중심을,
-    * 아니면 본인위치를 보여주기
-    */
-   useEffect(() => {
-      const mainInit = async () => {
-         try {
-            const ret = await getMyRegion();
-            if (ret.isInside) {
-               const initialCoords = {
-                  latitude: ret.parsed.latitude,
-                  longitude: ret.parsed.longitude,
-                  ...deltas,
-               };
-               callAfterInit(initialCoords);
-            }
-         } catch (e) {
-            console.log(e);
-         }
-      };
-      mainInit();
-   }, [refresh]);
-
-   const callAfterInit = useCallback(
-      (initialCoords: Region) => {
-         if (isWeb) {
-            setRegion(initialCoords);
-         } else {
-            mapViewRef.current?.animateToRegion(initialCoords, 1000);
-            setTimeout(() => setRegion(initialCoords), 1000);
-         }
-      },
-      [mapViewRef]
-   );
 
    /**
     * 페이지 스크롤 함수
@@ -177,7 +141,6 @@ function ReportContainer({ navigation }: RootStackScreenProps<"Report">) {
    // 초기 추가요청 화면으로 이동 및 초기화
    const gotoReport = () => {
       // 초기화
-      setRefresh((prev) => prev + 1);
       setPhoto(null);
       setAddPhoto(false);
       setLocationType(SMOKE);

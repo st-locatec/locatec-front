@@ -1,5 +1,4 @@
 import React from "react";
-import { StyleSheet } from "react-native";
 import Colors from "../../../constants/Colors";
 import { smokingPlace, trashcan } from "../../../constants/Strings";
 import { LocationType, SMOKE, TRASHCAN } from "../../../types";

@@ -1,4 +1,5 @@
 import MapView, { Region } from "react-native-maps";
+import { MyLocationType } from "../../modules/myLocation";
 import {
    AnimateRegionType,
    CoordType,
@@ -11,8 +12,7 @@ export type stylesFuncType = {
 };
 
 export type MainViewType = {
-   isInside: boolean;
-   myLocation: Region;
+   myLocation: MyLocationType;
    markers: MarkerType[] | undefined;
    markerImages: any | undefined;
    region: Region;

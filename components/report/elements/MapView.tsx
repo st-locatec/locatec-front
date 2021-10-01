@@ -2,9 +2,8 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Image } from "react-native-elements";
 import DefaultMapView, { Marker, Region } from "react-native-maps";
-import { centerSchool } from "../../../constants/Constants";
 import { MARKER_SIZE } from "../../../constants/Size";
-import { AnimateRegionType, CoordType } from "../../../types";
+import { CoordType } from "../../../types";
 
 export type MapViewProps = {
    region: Region;
@@ -17,7 +16,6 @@ function MapView({ region, mapViewRef, onPressMap }: MapViewProps) {
       <DefaultMapView
          key="Gmap"
          ref={mapViewRef}
-         initialRegion={centerSchool}
          region={region}
          style={styles.map}
          onPress={(e) => onPressMap(e.nativeEvent.coordinate)}>

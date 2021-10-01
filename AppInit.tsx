@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -9,6 +9,10 @@ import { View, ViewProps } from "./components/Themed";
 import { setMarkers } from "./modules/markers";
 import { getWholeListApi } from "./api/wholeList";
 import { NO_DATA } from "./api/serverError";
+import getMyRegion from "./utils/getMyRegion";
+import { deltas } from "./constants/Constants";
+import { setMyLocation } from "./modules/myLocation";
+import { Region } from "react-native-maps";
 
 function AppInit({ children }: ViewProps) {
    const [isLoadingComplete, setLoadingComplete] = useState(false); // 로딩 상태
@@ -48,6 +52,34 @@ function AppInit({ children }: ViewProps) {
    };
 
    const onFinish = () => setLoadingComplete(true);
+
+   useEffect(() => {
+      // 로딩이 끝나면 현재 유저 위치 받기
+      const myLocation = async () => {
+         if (isLoadingComplete) {
+            try {
+               const ret = await getMyRegion();
+               // 학교 외부일경우 우리 앱에선 유저의 위치가 의미가 없으므로
+               // 안일때만 myLocation store에 저장함.
+               if (ret.isInside) {
+                  dispatch(
+                     setMyLocation({
+                        region: {
+                           latitude: ret.parsed.latitude,
+                           longitude: ret.parsed.longitude,
+                           ...deltas,
+                        },
+                        isInside: true,
+                     })
+                  );
+               }
+            } catch (e) {
+               console.log(e);
+            }
+         }
+      };
+      myLocation();
+   }, [isLoadingComplete]);
 
    // 로딩 중일땐 AppLoading을 렌더.
    // AppLoading은 startAsync 함수가 완료될때까지 splash 화면을 렌더한다.
