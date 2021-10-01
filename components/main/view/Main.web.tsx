@@ -2,12 +2,10 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { View } from "../../Themed";
-import { CustomSpeedDial } from "../elements/CustomButtons";
 import Colors from "../../../constants/Colors";
-import { MarkerType, SMOKE, TRASHCAN } from "../../../types";
-import { smokingPlace, trashcan } from "../../../constants/Strings";
+import { MarkerType } from "../../../types";
 import { MainViewType } from "../types";
-import { deltas } from "../../../constants/Constants";
+import { centerSchool, deltas } from "../../../constants/Constants";
 import isTwoRegionSame from "../../../utils/isTwoRegionSame";
 import makeGoogleIcon from "../../../utils/makeGoogleIcon";
 import LeftBottomButton from "../elements/LeftBottomButtons";
@@ -35,6 +33,7 @@ function Main({
             <MapView
                key="Gmap"
                ref={mapViewRef}
+               initialRegion={centerSchool}
                region={region}
                style={styles.map}
                defaultZoom={18}

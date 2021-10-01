@@ -9,6 +9,7 @@ import WebView from "react-native-webview";
 import { MainViewType } from "../types";
 import LeftBottomButton from "../elements/LeftBottomButtons";
 import RightBottomSpeedDial from "../elements/RightBottomSpeedDial";
+import { centerSchool } from "../../../constants/Constants";
 
 function Main({
    myLocation,
@@ -30,11 +31,11 @@ function Main({
          <View style={styles.container}>
             <MapView
                key="Gmap"
+               initialRegion={centerSchool}
                ref={mapViewRef}
                region={region}
                showsUserLocation={isInside ? false : true}
-               style={[styles.map]}
-               onRegionChangeComplete={onAnimateRegion}>
+               style={[styles.map]}>
                {
                   // 유저 위치에 마커 보여주기. 학교 밖이면 보여주지 않음.
                   markerImages && isInside && (

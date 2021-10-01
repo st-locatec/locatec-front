@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import DefaultMapView, { Marker, Region } from "react-native-maps";
+import { centerSchool } from "../../../constants/Constants";
 import { AnimateRegionType, CoordType } from "../../../types";
 import makeGoogleIcon from "../../../utils/makeGoogleIcon";
 
@@ -8,7 +9,6 @@ export type MapViewProps = {
    region: Region;
    mapViewRef: React.RefObject<DefaultMapView>;
    onPressMap: (coord: CoordType) => void;
-   onAnimateRegion?: AnimateRegionType;
 };
 
 function MapView({ region, mapViewRef, onPressMap }: MapViewProps) {
@@ -16,10 +16,11 @@ function MapView({ region, mapViewRef, onPressMap }: MapViewProps) {
       <DefaultMapView
          key="Gmap"
          ref={mapViewRef}
+         initialRegion={centerSchool}
          region={region}
          style={styles.map}
          defaultZoom={18}
-         options={{ disableDefaultUI: true, zoom: 18 }}
+         options={{ disableDefaultUI: true }}
          onPress={(v: any) => {
             onPressMap({
                latitude: v.latLng.lat(),

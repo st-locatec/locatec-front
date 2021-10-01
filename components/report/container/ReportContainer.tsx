@@ -41,30 +41,34 @@ function ReportContainer({ navigation }: RootStackScreenProps<"Report">) {
     */
    useEffect(() => {
       const mainInit = async () => {
-         let initialCoords: Region = centerSchool;
-
          try {
-            const parsed = await getMyRegion();
-            if (
-               parsed.latitude <= region.latitude + INSIDE_SHCOOL &&
-               parsed.longitude <= region.longitude + INSIDE_SHCOOL &&
-               parsed.latitude >= region.latitude - INSIDE_SHCOOL &&
-               parsed.longitude >= region.longitude - INSIDE_SHCOOL
-            ) {
-               initialCoords = {
-                  latitude: parsed.latitude,
-                  longitude: parsed.longitude,
+            const ret = await getMyRegion();
+            if (ret.isInside) {
+               const initialCoords = {
+                  latitude: ret.parsed.latitude,
+                  longitude: ret.parsed.longitude,
                   ...deltas,
                };
+               callAfterInit(initialCoords);
             }
          } catch (e) {
-            initialCoords = centerSchool;
-         } finally {
-            setRegion(initialCoords);
+            console.log(e);
          }
       };
       mainInit();
    }, [refresh]);
+
+   const callAfterInit = useCallback(
+      (initialCoords: Region) => {
+         if (isWeb) {
+            setRegion(initialCoords);
+         } else {
+            mapViewRef.current?.animateToRegion(initialCoords, 1000);
+            setTimeout(() => setRegion(initialCoords), 1000);
+         }
+      },
+      [mapViewRef]
+   );
 
    /**
     * 페이지 스크롤 함수
@@ -181,27 +185,15 @@ function ReportContainer({ navigation }: RootStackScreenProps<"Report">) {
       scrollToIndex(0);
    };
 
-   // native 환경에서, region 이동 애니메이션이 끝났을때 region setting을 위한 함수
-   const onAnimateRegion = (
-      reg: Region,
-      details?:
-         | {
-              isGesture: boolean;
-           }
-         | undefined
-   ) => {
-      if (!details?.isGesture) {
-         setRegion(reg);
-      }
-   };
-
    // 지도를 눌렀을때 그쪽으로 이동 및 region 세팅 함수.
    // 웹일 경우 animateToRegion이 작동하지 않아, 애니메이션없이 세팅만 해준다.
    const onPressMap = (coordinate: CoordType) => {
+      const reg = { ...coordinate, ...deltas };
       if (isWeb) {
-         setRegion({ ...coordinate, ...deltas });
+         setRegion(reg);
       } else {
-         mapViewRef.current?.animateToRegion({ ...coordinate, ...deltas }, 500);
+         mapViewRef.current?.animateToRegion(reg, 1000);
+         setTimeout(() => setRegion(reg), 1000);
       }
    };
 
@@ -222,7 +214,6 @@ function ReportContainer({ navigation }: RootStackScreenProps<"Report">) {
          sendRequest={sendRequest}
          gotoReport={gotoReport}
          gotoHome={gotoHome}
-         onAnimateRegion={onAnimateRegion}
          onPressMap={onPressMap}
       />
    );

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import MapView, { Region } from "react-native-maps";
 import Main from "../view/Main";
 import {
@@ -11,7 +11,7 @@ import {
 } from "../../../types";
 import calculateEuclidean from "../../../utils/calculateEuclidean";
 import { INSIDE_SHCOOL } from "../../../constants/Size";
-import { centerSchool, deltas } from "../../../constants/Constants";
+import { centerSchool, deltas, isWeb } from "../../../constants/Constants";
 import getMyLocation from "../../../utils/getMyRegion";
 import isTwoRegionSame from "../../../utils/isTwoRegionSame";
 import { useSelector } from "react-redux";
@@ -19,7 +19,7 @@ import { RootState } from "../../../modules";
 
 function MainContainer({ navigation }: RootStackScreenProps<"Main">) {
    const [myLocation, setMyLocation] = useState<Region>(centerSchool); // 유저 위치
-   const [isInside, setIIsInside] = useState<boolean>(false); // 유저가 학교 안인지
+   const [isInside, setIsInside] = useState<boolean>(false); // 유저가 학교 안인지
    const [region, setRegion] = useState<Region>(centerSchool); // 화면 중심 region
    const [locationType, setLocationType] = useState<LocationType>(SMOKE); // 보여줄 마커 타입. 흡연장소 또는 쓰레기통
    const [isOpen, setIsOpen] = useState<boolean>(false); // 오른쪽 하단 speedDial이 열려있는지 닫혀있는지
@@ -46,24 +46,36 @@ function MainContainer({ navigation }: RootStackScreenProps<"Main">) {
          setMarkerImages(obj);
 
          // 현재 유저 위치 받기
-         const parsed = await getMyLocation();
-         if (
-            parsed.latitude <= centerSchool.latitude + INSIDE_SHCOOL &&
-            parsed.longitude <= centerSchool.longitude + INSIDE_SHCOOL &&
-            parsed.latitude >= centerSchool.latitude - INSIDE_SHCOOL &&
-            parsed.longitude >= centerSchool.longitude - INSIDE_SHCOOL
-         ) {
-            const initialCoords = {
-               latitude: parsed.latitude,
-               longitude: parsed.longitude,
-               ...deltas,
-            };
-            setIIsInside(true);
-            setMyLocation(initialCoords);
+         try {
+            const ret = await getMyLocation();
+            if (ret.isInside) {
+               const initialCoords = {
+                  latitude: ret.parsed.latitude,
+                  longitude: ret.parsed.longitude,
+                  ...deltas,
+               };
+               setIsInside(true);
+               setMyLocation(initialCoords);
+               callAfterInit(initialCoords);
+            }
+         } catch (e) {
+            console.log(e);
          }
       };
       mainInit();
    }, []);
+
+   const callAfterInit = useCallback(
+      (initialCoords: Region) => {
+         if (isWeb) {
+            setRegion(initialCoords);
+         } else {
+            mapViewRef.current?.animateToRegion(initialCoords, 1000);
+            setTimeout(() => setRegion(initialCoords), 1000);
+         }
+      },
+      [mapViewRef]
+   );
 
    /**
     *  지도의 중심과 이 파일에서 관리하는 region의 상태를 일치시키기 위한 함수
@@ -72,7 +84,9 @@ function MainContainer({ navigation }: RootStackScreenProps<"Main">) {
     *  region(지도 중심) 이동이 완료되었을 때 호출되는 이벤트인
     *  onRegionChangeComplete의 콜백함수로 활용.
     *
-    *  또는 웹에서는 이미지를 닫기 위해 사용되기도 함.
+    *  웹에서는 이미지를 닫기 위해 사용되기도 함.
+    *
+    *  앱에서는 동작이 불안정하여 사용하지 않음
     */
    const onAnimateRegion = (reg: Region) => {
       if (!isTwoRegionSame(reg, region)) {
@@ -81,9 +95,9 @@ function MainContainer({ navigation }: RootStackScreenProps<"Main">) {
    };
 
    // 우측하단 speedDial 버튼 열기 닫기 함수
-   const toggleIsOpen = () => {
+   const toggleIsOpen = useCallback(() => {
       setIsOpen((prev) => !prev);
-   };
+   }, []);
 
    // speedDial 을 열었을 때 나오는 버튼을 눌렀을 때 호출됨. 보여줄 marker를 바꿈
    const changeLocationType = (v: LocationType) => {
@@ -114,13 +128,12 @@ function MainContainer({ navigation }: RootStackScreenProps<"Main">) {
             }
          });
 
-         mapViewRef.current?.animateToRegion(
-            {
-               ...closestRegion,
-               ...deltas,
-            },
-            1000
-         );
+         const reg = {
+            ...closestRegion,
+            ...deltas,
+         };
+         mapViewRef.current?.animateToRegion(reg, 1000);
+         setTimeout(() => setRegion(reg), 1000);
       }
    };
 

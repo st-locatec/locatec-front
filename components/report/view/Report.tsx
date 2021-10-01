@@ -25,7 +25,6 @@ function Report({
    gotoHome,
    gotoReport,
    addPhoto,
-   onAnimateRegion,
    settingAddPhoto,
    onPressMap,
 }: ReportViewProps) {
@@ -33,12 +32,7 @@ function Report({
 
    // 각 페이지에 보여줄 화면 배열
    const contentArray = [
-      <Map
-         region={region}
-         mapViewRef={mapViewRef}
-         onAnimateRegion={onAnimateRegion}
-         onPressMap={onPressMap}
-      />,
+      <Map region={region} mapViewRef={mapViewRef} onPressMap={onPressMap} />,
       <Info
          locationType={locationType}
          settingLocationType={settingLocationType}
