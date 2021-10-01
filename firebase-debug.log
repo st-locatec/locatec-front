@@ -1,29 +1,31 @@
-[debug] [2021-09-30T09:10:35.467Z] ----------------------------------------------------------------------
-[debug] [2021-09-30T09:10:35.469Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\gpfqp\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
-[debug] [2021-09-30T09:10:35.469Z] CLI Version:   9.18.0
-[debug] [2021-09-30T09:10:35.469Z] Platform:      win32
-[debug] [2021-09-30T09:10:35.469Z] Node Version:  v16.7.0
-[debug] [2021-09-30T09:10:35.470Z] Time:          Thu Sep 30 2021 18:10:35 GMT+0900 (대한민국 표준시)
-[debug] [2021-09-30T09:10:35.470Z] ----------------------------------------------------------------------
+[debug] [2021-10-01T12:07:18.381Z] ----------------------------------------------------------------------
+[debug] [2021-10-01T12:07:18.383Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\gpfqp\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2021-10-01T12:07:18.383Z] CLI Version:   9.18.0
+[debug] [2021-10-01T12:07:18.383Z] Platform:      win32
+[debug] [2021-10-01T12:07:18.383Z] Node Version:  v16.7.0
+[debug] [2021-10-01T12:07:18.384Z] Time:          Fri Oct 01 2021 21:07:18 GMT+0900 (대한민국 표준시)
+[debug] [2021-10-01T12:07:18.384Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2021-09-30T09:10:35.473Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
-[debug] [2021-09-30T09:10:35.537Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2021-09-30T09:10:35.537Z] > authorizing via signed-in user (callmeshin75@gmail.com)
-[debug] [2021-09-30T09:10:35.537Z] [iam] checking project locatec-public for permissions ["firebase.projects.get","firebasehosting.sites.update"]
-[debug] [2021-09-30T09:10:35.538Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
-[debug] [2021-09-30T09:10:35.538Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
- <request body omitted>
-[debug] [2021-09-30T09:10:35.723Z] <<< HTTP RESPONSE 200 {"pragma":"no-cache","date":"Thu, 30 Sep 2021 09:10:36 GMT","expires":"Mon, 01 Jan 1990 00:00:00 GMT","cache-control":"no-cache, no-store, max-age=0, must-revalidate","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
-[debug] [2021-09-30T09:10:35.730Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/locatec-public:testIamPermissions  
+[debug] [2021-10-01T12:07:18.430Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2021-10-01T12:07:18.430Z] > authorizing via signed-in user (callmeshin75@gmail.com)
+[debug] [2021-10-01T12:07:18.430Z] [iam] checking project locatec-public for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2021-10-01T12:07:18.432Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/locatec-public:testIamPermissions  
  {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
-[debug] [2021-09-30T09:10:36.043Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
-[debug] [2021-09-30T09:10:36.043Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
-[debug] [2021-09-30T09:10:36.052Z] Error: EPERM: operation not permitted, rename 'C:\Users\gpfqp\.config\configstore\firebase-tools.json.932188442' -> 'C:\Users\gpfqp\.config\configstore\firebase-tools.json'
-    at Object.renameSync (node:fs:980:3)
-    at Function.writeFileSync [as sync] (C:\Users\gpfqp\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\write-file-atomic\index.js:244:8)
-    at Configstore.set all [as all] (C:\Users\gpfqp\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\configstore\index.js:61:20)
-    at Configstore.set (C:\Users\gpfqp\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\configstore\index.js:91:12)
-    at C:\Users\gpfqp\AppData\Roaming\npm\node_modules\firebase-tools\lib\fetchMOTD.js:35:39
+[debug] [2021-10-01T12:07:19.518Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Fri, 01 Oct 2021 12:07:20 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=813","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-10-01T12:07:19.520Z] > refreshing access token with scopes: []
+[debug] [2021-10-01T12:07:19.520Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-10-01T12:07:19.753Z] <<< HTTP RESPONSE 200 {"pragma":"no-cache","cache-control":"no-cache, no-store, max-age=0, must-revalidate","date":"Fri, 01 Oct 2021 12:07:20 GMT","expires":"Mon, 01 Jan 1990 00:00:00 GMT","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-10-01T12:07:19.765Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/locatec-public [none]
+[debug] [2021-10-01T12:07:49.771Z] Timeout reached making request to https://firebase.googleapis.com/v1beta1/projects/locatec-public
+[debug] [2021-10-01T12:07:49.993Z] FirebaseError: Timeout reached making request to https://firebase.googleapis.com/v1beta1/projects/locatec-public
+    at Client.doRequest (C:\Users\gpfqp\AppData\Roaming\npm\node_modules\firebase-tools\lib\apiv2.js:209:23)
     at processTicksAndRejections (node:internal/process/task_queues:96:5)
+    at async Client.request (C:\Users\gpfqp\AppData\Roaming\npm\node_modules\firebase-tools\lib\apiv2.js:96:20)
+    at async Object.getFirebaseProject (C:\Users\gpfqp\AppData\Roaming\npm\node_modules\firebase-tools\lib\management\projects.js:290:21)
+    at async Object.getDefaultHostingSite (C:\Users\gpfqp\AppData\Roaming\npm\node_modules\firebase-tools\lib\getDefaultHostingSite.js:8:21)
+    at async requireHostingSite (C:\Users\gpfqp\AppData\Roaming\npm\node_modules\firebase-tools\lib\requireHostingSite.js:9:18)
+    at async Object.fn (C:\Users\gpfqp\AppData\Roaming\npm\node_modules\firebase-tools\lib\commands\deploy.js:65:9)
+    at async C:\Users\gpfqp\AppData\Roaming\npm\node_modules\firebase-tools\lib\command.js:188:17
 [error] 
-[error] Error: An unexpected error has occurred.
+[error] Error: Failed to get Firebase project locatec-public. Please make sure the project exists and your account has permission to access it.

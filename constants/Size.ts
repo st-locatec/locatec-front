@@ -1,6 +1,7 @@
 // 여러 군데서 사용되는 사이즈 정의
 export const FLOATING_BUTTON_WIDTH: number = 48;
 export const INSIDE_SHCOOL: number = 0.007;
+export const NEAR_PLACE: number = 0.004;
 export const MARKER_SIZE: number = 30;
 export const REPORT_PHOTO_HEIGHT: number = 200;
 export const NAV_HEADER_HEIGHT: number = 64;

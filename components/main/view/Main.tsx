@@ -2,14 +2,14 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import MapView, { Callout, Marker } from "react-native-maps";
 import { View } from "../../Themed";
-import { Image } from "react-native-elements";
 import Colors from "../../../constants/Colors";
 import { MarkerType } from "../../../types";
-import WebView from "react-native-webview";
 import { MainViewType } from "../types";
 import LeftBottomButton from "../elements/LeftBottomButtons";
 import RightBottomSpeedDial from "../elements/RightBottomSpeedDial";
 import { centerSchool } from "../../../constants/Constants";
+import { Svg, Image as ImageSvg } from "react-native-svg";
+import { Image } from "react-native-elements";
 
 function Main({
    myLocation,
@@ -20,7 +20,6 @@ function Main({
    mapViewRef,
    isOpen,
    locationType,
-   onAnimateRegion,
    toggleIsOpen,
    goToReport,
    changeLocationType,
@@ -74,11 +73,14 @@ function Main({
                                        styles.calloutSize,
                                        styles.calloutContainer,
                                     ]}>
-                                    <WebView
-                                       source={{ uri: item.image }}
-                                       style={[styles.calloutSize]}
-                                       resizeMode="cover"
-                                    />
+                                    <Svg style={[styles.calloutSize]}>
+                                       <ImageSvg
+                                          width="100%"
+                                          height="100%"
+                                          preserveAspectRatio="xMidYMid slice"
+                                          href={{ uri: item.image }}
+                                       />
+                                    </Svg>
                                  </View>
                               </Callout>
                            </Marker>
@@ -128,8 +130,8 @@ const styles = StyleSheet.create({
       borderColor: Colors.colorSet.stGray,
    },
    calloutSize: {
-      width: 120,
-      height: 90,
+      width: 240,
+      height: 180,
       borderRadius: 30,
    },
 });
