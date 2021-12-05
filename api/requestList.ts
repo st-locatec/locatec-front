@@ -12,6 +12,7 @@ export const sendRequestApi = async (item: {
    try {
       await axios.post(`${ADDRESS}/product/register/request`, item);
    } catch (e) {
+      console.log(e.response.data);
       throw e;
    }
 };
