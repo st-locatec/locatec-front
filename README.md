@@ -58,11 +58,7 @@
 
 ## UI
 
-<style>
-td, th {
-   border: none!important;
-}
-</style>
+
 <table frame="void" style="border:none;" ><tbody>
     <tr align="center" valign="middle" style="border:none;">
     <td style="border:none; width:33%">
